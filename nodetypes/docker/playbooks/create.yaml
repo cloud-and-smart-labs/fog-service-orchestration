@@ -1,9 +1,8 @@
 ---
 - hosts: all
   tasks:
-
     - name: Install prerequsiste packages
-      package:
+      apt:
         name:
           - python3-pip
           - python3-setuptools
@@ -20,7 +19,7 @@
         executable: pip3
 
     - name: Install docker from get-docker convenience script
-      shell: curl https://get.docker.com/ | bash
+      shell: curl -fsSL https://get.docker.com | sh
 
     - name: Ensure the Docker group exists
       group:

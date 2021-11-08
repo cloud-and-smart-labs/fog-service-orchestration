@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
     - name: Uninstall Docker packages
-      package:
+      apt:
         name:
           - docker-engine
           - docker
@@ -12,15 +12,17 @@
           - docker-ce-rootless-extras
         state: absent
 
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoclean: yes
+
     - name: Recursively remove docker directory
       file:
-        path: /var/lib/docker
+        path: '{{ item }}'
         state: absent
-
-    - name: Remove docker repo
-      file:
-        path: /etc/apt/sources.list.d/docker.list
-        state: absent
+      with_items:
+        - /var/lib/docker
+        - /etc/apt/sources.list.d/docker.list
     
     - name: Uninstall prerequsiste Python packages
       pip:
