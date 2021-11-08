@@ -1,0 +1,34 @@
+---
+- hosts: all
+  tasks:
+
+    - name: Install prerequsiste packages
+      package:
+        name:
+          - python3-pip
+          - python3-setuptools
+          - python3-venv
+          - curl
+        state: present
+
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - pip==21.3.1
+          - docker==5.0.3
+        state: latest
+        executable: pip3
+
+    - name: Install docker from get-docker convenience script
+      shell: curl https://get.docker.com/ | bash
+
+    - name: Ensure the Docker group exists
+      group:
+        name: docker
+        state: present
+
+    - name: Starting docker service
+      service:
+        name: docker
+        state: started
+...
