@@ -3,11 +3,11 @@ tosca_definitions_version: tosca_simple_yaml_1_3
 
 imports:
   - nodetypes/docker/docker.yaml
-  - nodetypes/pyapp/pyapp.yaml
+  - nodetypes/container/container.yaml
 
 metadata:
   template_name: "docker"
-  template_author: "XLAB"
+  template_author: "UoH"
   template_version: "1.0"
 
 topology_template:
@@ -27,8 +27,8 @@ topology_template:
       requirements:
         - host: my-workstation
 
-    app:
-      type: radon.nodes.pyapp
+    app-container:
+      type: radon.nodes.container
       requirements:
-        - host: my-workstation
+        - host: docker
 ...
