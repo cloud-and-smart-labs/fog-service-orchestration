@@ -22,13 +22,13 @@ topology_template:
         private_address: { get_input: host_ip }
         public_address: { get_input: host_ip }
 
-    docker:
-      type: radon.nodes.docker
+    docker-engine:
+      type: radon.nodes.Docker
       requirements:
         - host: my-workstation
 
     app-container:
-      type: radon.nodes.container
+      type: radon.nodes.Container
       requirements:
-        - host: docker
+        - host: docker-engine
 ...
