@@ -11,5 +11,7 @@
     - name: Run python app image in docker container
       docker_container:
         name: pyimg
-        image: suvambasak/pyimg:1
+        image: suvambasak/pyimg:vol
+        volumes:
+          - /tmp:/home
 ...

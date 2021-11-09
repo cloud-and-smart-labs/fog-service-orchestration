@@ -9,4 +9,5 @@ node_types:
         type: tosca.interfaces.node.lifecycle.Standard
         operations:
           create: playbooks/create.yaml
+          delete: playbooks/delete.yaml
 ...
