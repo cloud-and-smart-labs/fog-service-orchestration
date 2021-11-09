@@ -1,6 +1,8 @@
 ---
 tosca_definitions_version: tosca_simple_yaml_1_3
 
+description: Service Template for deploying docker container of a python script.
+
 imports:
   - nodetypes/docker/docker.yaml
   - nodetypes/container/container.yaml
@@ -22,13 +24,13 @@ topology_template:
         private_address: { get_input: host_ip }
         public_address: { get_input: host_ip }
 
-    docker:
-      type: radon.nodes.docker
+    docker-engine:
+      type: radon.nodes.Docker
       requirements:
         - host: my-workstation
 
     app-container:
-      type: radon.nodes.container
+      type: radon.nodes.Container
       requirements:
-        - host: docker
+        - host: docker-engine
 ...
