@@ -1,18 +1,17 @@
 ---
 tosca_definitions_version: tosca_simple_yaml_1_3
 
-description: Docker Container node type
+description: Docker Swarm nodes type.
 
 node_types:
-  radon.nodes.Container:
+  radon.nodes.DockerSwarm:
     derived_from: tosca.nodes.SoftwareComponent
-    
-    requirements:
-      - host:
-          capability: tosca.capabilities.Container
-          node: radon.nodes.Docker
-          relationship: tosca.relationships.HostedOn
-          occurrences: [ 1, 1 ]
+
+    capabilities:
+      host:
+        type: tosca.capabilities.Container
+        occurrences: [ 1, UNBOUNDED ]
+        valid_source_types: [ radon.nodes.ServiceContainer ]
 
     interfaces:
       Standard:

@@ -1,8 +1,0 @@
----
-- hosts: all
-  tasks:
-    - name: Remove JSON file
-      file:
-        path: /tmp/data.json
-        state: absent
-...

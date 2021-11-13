@@ -1,0 +1,23 @@
+---
+- hosts: all
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - pip==21.3.1
+          - docker==5.0.3
+        state: latest
+        executable: pip3
+
+    - name: Starting docker service
+      service:
+        name: docker
+        state: started
+    
+    - name: Init docker swarm
+      docker_swarm:
+        state: present
+
+
+
+...

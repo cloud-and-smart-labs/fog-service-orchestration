@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+    - name: Nginx service deploying
+      docker_swarm_service:
+        name: nginx
+        image: nginx:latest
+        replicas: 3
+...

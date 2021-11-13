@@ -1,11 +1,11 @@
 ---
 tosca_definitions_version: tosca_simple_yaml_1_3
 
-description: Service Template for deploying docker container of a python script.
+description: Service Template for deploying service container on Docker Swarm.
 
 imports:
-  - nodetypes/docker/docker.yaml
-  - nodetypes/container/container.yaml
+  - nodetypes/swarm/swarm.yaml
+  - nodetypes/service_container/service_container.yaml
 
 metadata:
   template_name: "docker"
@@ -24,13 +24,13 @@ topology_template:
         private_address: { get_input: host_ip }
         public_address: { get_input: host_ip }
 
-    docker-engine:
-      type: radon.nodes.Docker
+    docker-swarm:
+      type: radon.nodes.DockerSwarm
       requirements:
         - host: my-workstation
 
-    app-container:
-      type: radon.nodes.Container
+    service:
+      type: radon.nodes.ServiceContainer
       requirements:
-        - host: docker-engine
+        - host: docker-swarm
 ...
