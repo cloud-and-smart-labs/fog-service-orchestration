@@ -17,6 +17,20 @@
     - name: Init docker swarm
       docker_swarm:
         state: present
+      register: token
+
+    - name: saving in file
+      shell: echo {{ token.swarm_facts.JoinTokens.Worker }} > /tmp/token
+    
+    - name: join new node with ssh
+      shell: ssh pi@192.168.0.103 "docker swarm join --token {{ token.swarm_facts.JoinTokens.Worker }} 192.168.0.166:2377"
+    
+
+
+
+
+    # - name: Execute python script
+    #   shell: python3 /home/pi/container-orchestration/scripts/test.py {{ token.swarm_facts.JoinTokens.Worker }}
 
 
 
