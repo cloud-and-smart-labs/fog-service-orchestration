@@ -16,6 +16,13 @@ node_types:
     interfaces:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
+        inputs:
+          manager:
+            default: { get_input: manager }
+            type: list
+          workers:
+            default: { get_input: workers }
+            type: list
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml
