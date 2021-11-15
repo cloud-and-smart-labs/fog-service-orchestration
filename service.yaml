@@ -16,6 +16,9 @@ topology_template:
   inputs:
     host_ip:
       type: string
+    workers:
+      type: list
+      default: []
 
   node_templates:
     my-workstation:

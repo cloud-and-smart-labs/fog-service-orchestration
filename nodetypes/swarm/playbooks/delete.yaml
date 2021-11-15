@@ -1,18 +1,19 @@
 ---
 - hosts: all
   tasks:
-    - name: remove nodes
-      shell: ssh pi@192.168.0.103 "docker swarm leave"
+    - name: remove nodes 1
+      shell: ssh pi@{{ item }} "docker swarm leave"
+      loop: "{{ workers }}"
 
     - name: Remove the swarm manager
       docker_swarm:
         state: absent
         force: true
     
-    # - name: Uninstall prerequsiste Python packages
-    #   pip:
-    #     name:
-    #       - docker==5.0.3
-    #     state: absent
-    #     executable: pip3
+    - name: Uninstall prerequsiste Python packages
+      pip:
+        name:
+          - docker==5.0.3
+        state: absent
+        executable: pip3
 ...
