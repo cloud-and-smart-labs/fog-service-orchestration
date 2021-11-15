@@ -16,6 +16,9 @@ topology_template:
   inputs:
     host_ip:
       type: string
+    manager:
+      type: list
+      default: []
     workers:
       type: list
       default: []

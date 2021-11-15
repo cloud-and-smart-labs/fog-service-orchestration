@@ -18,12 +18,9 @@
       docker_swarm:
         state: present
       register: token
-
-    - name: saving in file
-      shell: echo {{ token.swarm_facts.JoinTokens.Worker }} > /tmp/token
     
     - name: join new node 1 with ssh
-      shell: ssh pi@{{ item }} "docker swarm join --token {{ token.swarm_facts.JoinTokens.Worker }} 192.168.0.166:2377"
+      shell: ssh pi@{{ item }} "docker swarm join --token {{ token.swarm_facts.JoinTokens.Worker }} {{ manager[0] }}:2377"
       loop: "{{ workers }}"
 
 ...
