@@ -17,6 +17,10 @@ node_types:
     interfaces:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
+        inputs:
+          image:
+            default: { get_input: image }
+            type: string
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml

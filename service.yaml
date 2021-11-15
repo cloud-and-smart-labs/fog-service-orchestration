@@ -22,6 +22,9 @@ topology_template:
     workers:
       type: list
       default: []
+    image:
+      type: string
+      default: hello-world
 
   node_templates:
     my-workstation:
