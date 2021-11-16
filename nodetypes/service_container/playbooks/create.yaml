@@ -5,5 +5,9 @@
       docker_swarm_service:
         name: nginx
         image: nginx:latest
-        replicas: 3
+        replicas: "{{ replicas }}"
+        publish:
+          - published_port: "{{ port }}"
+            target_port: 80
+        
 ...

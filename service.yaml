@@ -16,12 +16,20 @@ topology_template:
   inputs:
     host_ip:
       type: string
+      
     manager:
       type: list
       default: []
     workers:
       type: list
       default: []
+
+    replicas:
+      type: integer
+      default: 1
+    port:
+      type: integer
+      default: 80
 
   node_templates:
     my-workstation:
@@ -35,7 +43,7 @@ topology_template:
       requirements:
         - host: my-workstation
 
-    service:
+    service-nginx:
       type: radon.nodes.ServiceContainer
       requirements:
         - host: docker-swarm
