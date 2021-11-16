@@ -1,7 +1,7 @@
 ---
 tosca_definitions_version: tosca_simple_yaml_1_3
 
-description: Docker Service node type for Swarm Cluster
+description: Nginx Service node type for Swarm Cluster
 
 node_types:
   radon.nodes.ServiceContainer:
@@ -18,9 +18,12 @@ node_types:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
         inputs:
-          image:
-            default: { get_input: image }
-            type: string
+          replicas:
+            default: { get_input: replicas }
+            type: integer
+          port:
+            default: { get_input: port }
+            type: integer
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml

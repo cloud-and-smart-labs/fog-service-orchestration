@@ -1,12 +1,13 @@
 ---
 host_ip: localhost
 
-manager:
-  - 192.168.0.166
+manager: []
 
 workers:
-  - 192.168.0.103
+  - 192.168.0.103 
   - 192.168.0.165
 
-image: nginx:latest
+replicas: 5
+
+port: 9000
 ...

@@ -14,13 +14,21 @@
         name: docker
         state: started
     
-    - name: Init docker swarm
+    - name: Init docker swarm and register the join token
       docker_swarm:
         state: present
       register: token
+
+    - name: Get the IP address of this machine and register
+      shell: echo $(hostname -I) | awk '{print $1}'
+      register: ip
     
-    - name: join new node 1 with ssh
-      shell: ssh pi@{{ item }} "docker swarm join --token {{ token.swarm_facts.JoinTokens.Worker }} {{ manager[0] }}:2377"
+    - name: Join all worker nodes
+      shell: ssh pi@{{ item }} "docker swarm join --token {{ token.swarm_facts.JoinTokens.Worker }} {{ ip.stdout }}:2377"
       loop: "{{ workers }}"
+
+    - name: Join all manager nodes
+      shell: ssh pi@{{ item }} "docker swarm join --token {{ token.swarm_facts.JoinTokens.Manager }} {{ ip.stdout }}:2377"
+      loop: "{{ manager }}"
 
 ...

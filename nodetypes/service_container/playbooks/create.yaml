@@ -3,7 +3,11 @@
   tasks:
     - name: Nginx service deploying
       docker_swarm_service:
-        name: test_ctr
-        image: "{{ image }}"
-        replicas: 4
+        name: nginx
+        image: nginx:latest
+        replicas: "{{ replicas }}"
+        publish:
+          - published_port: "{{ port }}"
+            target_port: 80
+        
 ...

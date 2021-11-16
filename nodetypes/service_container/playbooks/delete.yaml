@@ -3,7 +3,7 @@
   tasks:
     - name: Remove nginx service
       docker_swarm_service:
-        name: test_ctr
+        name: nginx
         state: absent
 
 ...
