@@ -32,6 +32,11 @@ replicas: 7
 ```
 
 ## Deployment of Service
+### Permission change
+```BASH
+chmod +x validate.sh deploy.sh undeploy.sh
+```
+
 ### Validate
 ```BASH
 ./validate.sh
