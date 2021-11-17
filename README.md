@@ -15,7 +15,7 @@ source .venv/bin/activate
 ```
 ### Install packages
 ```bash
-pip install -r requirements.txt 
+pip install opera
 ```
 
 ### Deactivate
