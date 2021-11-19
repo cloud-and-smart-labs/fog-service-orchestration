@@ -1,4 +1,4 @@
-# Nginx Container Orchestration with xOpera
+# Python Flask Container Orchestration with xOpera
 
 ## Configure with `inputs.yaml` file
 
@@ -21,9 +21,9 @@ manager: []
 ```
 
 ### Port mapping
-The port 9000 will be mapped to port 80
+The port 80 will be mapped to port 80
 ```YAML
-port: 9000
+port: 80
 ```
 ### Number of replicas
 Total 7 container will be started
