@@ -1,0 +1,20 @@
+---
+host_ip: localhost
+
+manager: []
+  # - 192.168.0.165
+
+workers:
+  - 192.168.0.103
+  # - 192.168.0.165
+  # - 192.168.0.131
+
+replicas: 2
+
+port: 80
+
+volume: "/tmp"
+
+sensor_nodes:
+  - 192.168.0.103
+...
