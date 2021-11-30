@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+    - name: Flask API Service deploying 
+      docker_swarm_service:
+        name: pyflaskdelay
+        image: suvambasak/pyimg:delayapi
+        replicas: "{{ replicas }}"
+        publish:
+          - published_port: "{{ port }}"
+            target_port: 5000
+        
+...

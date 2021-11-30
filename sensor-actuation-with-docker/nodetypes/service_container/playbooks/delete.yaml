@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+    - name: Remove Flask API Service
+      docker_swarm_service:
+        name: pyflaskdelay
+        state: absent
+
+...

@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: Stop sensing and actuation container
+      shell: ssh pi@{{ item }} "docker container stop rpi-led"
+      loop: "{{ privileged_nodes }}"
+
+...
