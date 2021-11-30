@@ -1,4 +1,4 @@
-# Python Flask Container Orchestration with xOpera
+# Python Flask and Privileged Container Orchestration with xOpera
 
 ## Configure with `inputs.yaml` file
 
@@ -29,6 +29,14 @@ port: 80
 Total 7 container will be started
 ```YAML
 replicas: 7
+```
+
+### Nodes with sensors and actuators
+IP Addresses of nodes
+```YAML
+privileged_nodes:
+  - 192.168.0.222
+  - 192.168.0.112
 ```
 
 ## Deployment of Service
