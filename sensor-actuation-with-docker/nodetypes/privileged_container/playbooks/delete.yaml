@@ -5,4 +5,8 @@
       shell: ssh pi@{{ item }} "docker container stop rpi-led"
       loop: "{{ privileged_nodes }}"
 
+    - name: Clean up all GPIO
+      shell: ssh pi@{{ item }} "docker container run --privileged --rm  -v /sys:/sys -v /usr:/usr -d suvambasak/pyimg:ledblinkcleanup"
+      loop: "{{ privileged_nodes }}"
+
 ...
