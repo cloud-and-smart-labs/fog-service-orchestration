@@ -1,0 +1,25 @@
+---
+- hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Stop the service
+      shell: ssh pi@{{ item }} "sudo systemctl stop led-websocket.service"
+      loop: "{{ sensor_nodes }}"
+
+    - name: Remove the service
+      shell: ssh pi@{{ item }} "sudo rm /etc/systemd/system/led-websocket.service"
+      loop: "{{ sensor_nodes }}"
+
+    - name: Remove repo
+      shell: ssh pi@{{ item }} "rm -rf ~/pi-system-service"
+      loop: "{{ sensor_nodes }}"
+
+    # - name: uninstall package
+    #   shell: ssh pi@{{ item }} "sudo pip3 uninstall websockets"
+    #   loop: "{{ sensor_nodes }}"
+
+    # - name: Remove git
+    #   shell: ssh pi@{{ item }} "sudo apt remove git"
+    #   loop: "{{ sensor_nodes }}"
+...
