@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+    - name: Python websocket Service deploying 
+      docker_swarm_service:
+        name: websocket
+        image: suvambasak/pyimg:websocketledserver
+        publish:
+          - published_port: 7890
+            target_port: 7890
+        
+...

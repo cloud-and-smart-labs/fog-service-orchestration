@@ -4,7 +4,7 @@
 
   tasks:
     - name: Install package
-      shell: ssh pi@{{ item }} "sudo pip3 install Adafruit_DHT"
+      shell: ssh pi@{{ item }} "sudo pip3 install websockets"
       loop: "{{ sensor_nodes }}"
     
     - name: Install git
@@ -21,11 +21,11 @@
       register: ip
 
     - name: Push configuration
-      shell: ssh pi@{{ item }} "echo '{\"pin\":\"4\",\"ip\":\"{{ ip.stdout }}\"}' > ~/pi-system-service/conf.json"
+      shell: ssh pi@{{ item }} "echo '{\"pin\":\"18\",\"ip\":\"{{ ip.stdout }}\"}' > ~/pi-system-service/conf.json"
       loop: "{{ sensor_nodes }}"
 
     - name: Move the service to the system directory
-      shell: ssh pi@{{ item }} "sudo mv ~/pi-system-service/dht11.service /etc/systemd/system/dht11.service"
+      shell: ssh pi@{{ item }} "sudo mv ~/pi-system-service/led-websocket.service /etc/systemd/system/led-websocket.service"
       loop: "{{ sensor_nodes }}"
 
     - name: Reload the systemctl daemon
@@ -33,10 +33,10 @@
       loop: "{{ sensor_nodes }}"
 
     - name: Enable the service
-      shell: ssh pi@{{ item }} "sudo systemctl enable dht11.service"
+      shell: ssh pi@{{ item }} "sudo systemctl enable led-websocket.service"
       loop: "{{ sensor_nodes }}"
 
     - name: Start the service
-      shell: ssh pi@{{ item }} "sudo systemctl start dht11.service"
+      shell: ssh pi@{{ item }} "sudo systemctl start led-websocket.service"
       loop: "{{ sensor_nodes }}"
 ...

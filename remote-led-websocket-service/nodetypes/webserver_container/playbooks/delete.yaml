@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+    - name: Nginx Service Service
+      docker_swarm_service:
+        name: nginx
+        state: absent
+
+...

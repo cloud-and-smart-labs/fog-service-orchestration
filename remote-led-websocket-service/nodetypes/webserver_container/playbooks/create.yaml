@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+    - name: Nginx Service deploying 
+      docker_swarm_service:
+        name: nginx
+        image: suvambasak/webpage:websocketled
+        publish:
+          - published_port: 80
+            target_port: 80
+        
+...

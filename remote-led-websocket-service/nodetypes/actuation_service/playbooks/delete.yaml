@@ -4,11 +4,11 @@
 
   tasks:
     - name: Stop the service
-      shell: ssh pi@{{ item }} "sudo systemctl stop dht11.service"
+      shell: ssh pi@{{ item }} "sudo systemctl stop led-websocket.service"
       loop: "{{ sensor_nodes }}"
 
     - name: Remove the service
-      shell: ssh pi@{{ item }} "sudo rm /etc/systemd/system/dht11.service"
+      shell: ssh pi@{{ item }} "sudo rm /etc/systemd/system/led-websocket.service"
       loop: "{{ sensor_nodes }}"
 
     - name: Remove repo
@@ -16,7 +16,7 @@
       loop: "{{ sensor_nodes }}"
 
     # - name: uninstall package
-    #   shell: ssh pi@{{ item }} "sudo pip3 uninstall Adafruit_DHT"
+    #   shell: ssh pi@{{ item }} "sudo pip3 uninstall websockets"
     #   loop: "{{ sensor_nodes }}"
 
     # - name: Remove git
