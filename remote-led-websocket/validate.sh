@@ -1,0 +1,1 @@
+opera validate -i inputs.yaml service.yaml
