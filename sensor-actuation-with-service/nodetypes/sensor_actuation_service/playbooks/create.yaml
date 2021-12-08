@@ -13,7 +13,7 @@
 
 
     - name: Clone the repository
-      shell: ssh pi@{{ item }} "git clone https://github.com/suvambasak/sensor.git"
+      shell: ssh pi@{{ item }} "git clone https://github.com/suvambasak/pi-system-service.git"
       loop: "{{ sensor_nodes }}"
 
     - name: Get the IP address of this machine and register
@@ -21,11 +21,11 @@
       register: ip
 
     - name: Push configuration
-      shell: ssh pi@{{ item }} "echo '{\"pin\":\"4\",\"ip\":\"{{ ip.stdout }}\"}' > ~/sensor/conf.json"
+      shell: ssh pi@{{ item }} "echo '{\"pin\":\"4\",\"ip\":\"{{ ip.stdout }}\"}' > ~/pi-system-service/conf.json"
       loop: "{{ sensor_nodes }}"
 
     - name: Move the service to the system directory
-      shell: ssh pi@{{ item }} "sudo mv ~/sensor/dht11.service /etc/systemd/system/dht11.service"
+      shell: ssh pi@{{ item }} "sudo mv ~/pi-system-service/dht11.service /etc/systemd/system/dht11.service"
       loop: "{{ sensor_nodes }}"
 
     - name: Reload the systemctl daemon

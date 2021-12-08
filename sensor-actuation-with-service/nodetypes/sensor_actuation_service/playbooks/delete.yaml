@@ -12,7 +12,7 @@
       loop: "{{ sensor_nodes }}"
 
     - name: Remove repo
-      shell: ssh pi@{{ item }} "rm -rf ~/sensor"
+      shell: ssh pi@{{ item }} "rm -rf ~/pi-system-service"
       loop: "{{ sensor_nodes }}"
 
     # - name: uninstall package
