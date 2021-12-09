@@ -1,5 +1,10 @@
 # Python Flask Container Orchestration with xOpera
 
+Deploying a Python Flask Container on a swarm of Fog Nodes (Raspberry Pis) with a **TOSCA Service Template**.
+
+---
+<br>
+
 ## Configure with `inputs.yaml` file
 
 ### Multiple Manager and Worker
@@ -30,6 +35,8 @@ Total 7 container will be started
 ```YAML
 replicas: 7
 ```
+---
+<br>
 
 ## Deployment of Service
 ### Permission change

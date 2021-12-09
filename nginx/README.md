@@ -1,5 +1,10 @@
 # Nginx Container Orchestration with xOpera
 
+Deploying an Nginx Docker Container on a Swarm of Fog Nodes (Raspberry Pis) with a **TOSCA Service Template**.
+
+---
+<br>
+
 ## Configure with `inputs.yaml` file
 
 ### Multiple Manager and Worker
@@ -30,6 +35,8 @@ Total 7 container will be started
 ```YAML
 replicas: 7
 ```
+---
+<br>
 
 ## Deployment of Service
 ### Permission change
