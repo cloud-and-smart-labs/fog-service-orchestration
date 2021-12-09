@@ -1,4 +1,9 @@
-# Python Flask Container Orchestration with xOpera
+# Python Flask Container and DHT11 Service Orchestration with xOpera
+
+Deploying a Python Flask Container on a swarm of Fog Nodes (Raspberry Pis) and `DHT11` Sensor background service on Raspberry Pis with a **TOSCA Service Template**. `DHT11` Sensor Service feeds the `Temperature` through the Flask API running in a swarm.
+
+---
+<br>
 
 ## Configure with `inputs.yaml` file
 
@@ -30,6 +35,8 @@ Total 7 container will be started
 ```YAML
 replicas: 7
 ```
+---
+<br>
 
 ## Deployment of Service
 ### Permission change

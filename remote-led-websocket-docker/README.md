@@ -1,4 +1,9 @@
-# Python Flask and Privileged Container Orchestration with xOpera
+# Python Websocket, Webserver Container and Privileged Container (LED) Orchestration with xOpera
+
+Deploying a Python Websocket and Nginx Webserver Container on a swarm of Fog Nodes (Raspberry Pis) and Privileged Containers (for ON/OFF LED) with a **TOSCA Service Template**. Webserver serves webpage with a button to `ON/OFF LED remotely`.
+
+---
+<br>
 
 ## Configure with `inputs.yaml` file
 
@@ -27,6 +32,8 @@ privileged_nodes:
   - 192.168.0.222
   - 192.168.0.112
 ```
+---
+<br>
 
 ## Deployment of Service
 ### Permission change
@@ -47,4 +54,4 @@ chmod +x validate.sh deploy.sh undeploy.sh
 ./undeploy.sh
 ```
 ## Web
-Goto: https://suvambasak.github.io/demo
+Goto: https://suvambasak.github.io/fog-service-orchestration

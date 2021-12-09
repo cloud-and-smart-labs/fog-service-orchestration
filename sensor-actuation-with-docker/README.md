@@ -1,4 +1,9 @@
-# Python Flask and Privileged Container Orchestration with xOpera
+# Python Flask and Privileged Container (LED Blink) Orchestration with xOpera
+
+Deploying a Python Flask Container on a swarm of Fog Nodes (Raspberry Pis) and Privileged Containers (for blinking LED) with a **TOSCA Service Template**. Privileged Containers get the frequency of blinking from the Flask API running in Swarm.
+
+---
+<br>
 
 ## Configure with `inputs.yaml` file
 
@@ -38,6 +43,8 @@ privileged_nodes:
   - 192.168.0.222
   - 192.168.0.112
 ```
+---
+<br>
 
 ## Deployment of Service
 ### Permission change

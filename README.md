@@ -1,4 +1,9 @@
-# Container Orchestration with xOpera
+# Container and Service Orchestration on Fog Nodes (Raspberry Pi) with xOpera
+
+**TOSCA Service Templates** for **Dynamic Deployment** of different Fog Computing Services.
+
+---
+<br>
 
 ## Create virtual environment
 ### Install dependencies
@@ -23,6 +28,8 @@ pip install opera
 deactivate
 ```
 ---
+<br>
+
 ## Validate
 ```bash
 opera validate -i inputs.yaml service.yaml
