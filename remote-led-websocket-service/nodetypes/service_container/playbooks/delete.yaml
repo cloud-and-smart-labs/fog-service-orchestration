@@ -3,7 +3,7 @@
   gather_facts: false
   
   tasks:
-    - name: Remove python flask service
+    - name: Remove service service
       docker_swarm_service:
         name: "{{ container_name }}"
         state: absent

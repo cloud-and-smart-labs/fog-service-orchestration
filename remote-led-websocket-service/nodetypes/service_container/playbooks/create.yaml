@@ -3,7 +3,7 @@
   gather_facts: false
   
   tasks:
-    - name: Nginx service deploying
+    - name: Service deploying
       docker_swarm_service:
         name: "{{ container_name }}"
         image: "{{ image_name }}"
