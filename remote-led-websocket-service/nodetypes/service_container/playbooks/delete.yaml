@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: false
+  
+  tasks:
+    - name: Remove python flask service
+      docker_swarm_service:
+        name: "{{ container_name }}"
+        state: absent
+
+...

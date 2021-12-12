@@ -5,16 +5,16 @@
   tasks:
     - name: Install package
       shell: ssh pi@{{ item }} "sudo pip3 install websockets"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
     
     - name: Install git
       shell: ssh pi@{{ item }} "sudo apt install git -y"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 
 
     - name: Clone the repository
       shell: ssh pi@{{ item }} "git clone https://github.com/suvambasak/pi-system-service.git"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 
     - name: Get the IP address of this machine and register
       shell: echo $(hostname -I) | awk '{print $1}'
@@ -22,21 +22,21 @@
 
     - name: Push configuration
       shell: ssh pi@{{ item }} "echo '{\"pin\":\"18\",\"ip\":\"{{ ip.stdout }}\"}' > ~/pi-system-service/conf.json"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 
     - name: Move the service to the system directory
       shell: ssh pi@{{ item }} "sudo mv ~/pi-system-service/led-websocket.service /etc/systemd/system/led-websocket.service"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 
     - name: Reload the systemctl daemon
       shell: ssh pi@{{ item }} "sudo systemctl daemon-reload"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 
     - name: Enable the service
       shell: ssh pi@{{ item }} "sudo systemctl enable led-websocket.service"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 
     - name: Start the service
       shell: ssh pi@{{ item }} "sudo systemctl start led-websocket.service"
-      loop: "{{ sensor_nodes }}"
+      loop: "{{ actuators }}"
 ...

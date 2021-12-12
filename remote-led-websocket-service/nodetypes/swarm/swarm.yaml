@@ -11,7 +11,7 @@ node_types:
       host:
         type: tosca.capabilities.Container
         occurrences: [ 1, UNBOUNDED ]
-        valid_source_types: [ radon.nodes.WebserverContainer, radon.nodes.WebsocketContainer ]
+        valid_source_types: [ radon.nodes.ServiceContainer ]
 
     interfaces:
       Standard:

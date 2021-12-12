@@ -10,8 +10,8 @@ node_types:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
         inputs:
-          sensor_nodes:
-            default: { get_input: sensor_nodes }
+          actuators:
+            default: { get_input: actuators }
             type: list
         operations:
           create: playbooks/create.yaml

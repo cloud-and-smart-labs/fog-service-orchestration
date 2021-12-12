@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  gather_facts: false
+  
   tasks:
     - name: Removing worker nodes from swarm
       shell: ssh pi@{{ item }} "docker swarm leave"

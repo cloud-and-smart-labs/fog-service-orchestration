@@ -5,8 +5,7 @@ description: Service Template for deploying remote LED service in swarm
 
 imports:
   - nodetypes/swarm/swarm.yaml
-  - nodetypes/webserver_container/webserver_container.yaml
-  - nodetypes/websocket_container/websocket_container.yaml
+  - nodetypes/service_container/service_container.yaml
   - nodetypes/actuation_service/actuation_service.yaml
 
 metadata:
@@ -26,7 +25,7 @@ topology_template:
       type: list
       default: []
 
-    sensor_nodes:
+    actuators:
       type: list
       default: []
 
@@ -42,18 +41,30 @@ topology_template:
       requirements:
         - host: my-workstation
 
-    websocket:
-      type: radon.nodes.WebsocketContainer
-      requirements:
-        - host: docker-swarm
-
     web-server:
-      type: radon.nodes.WebserverContainer
+      type: radon.nodes.ServiceContainer
+      properties:
+        container_name: nginx
+        image_name: suvambasak/webpage:websocketled
+        published_port: 80
+        target_port: 80
+        replicas: 1
       requirements:
         - host: docker-swarm
 
-    led-service:
+    python-websocket-server:
+      type: radon.nodes.ServiceContainer
+      properties:
+        container_name: websocket_server
+        image_name: suvambasak/pyimg:websocketledserver
+        published_port: 7890
+        target_port: 7890
+        replicas: 1
+      requirements:
+        - host: docker-swarm
+
+    led-actuators:
       type: radon.nodes.ActuationService
       requirements:
-        - host: websocket
+        - host: python-websocket-server
 ...
