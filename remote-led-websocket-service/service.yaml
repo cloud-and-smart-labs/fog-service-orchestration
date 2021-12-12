@@ -66,5 +66,6 @@ topology_template:
     led-actuators:
       type: radon.nodes.ActuationService
       requirements:
-        - host: python-websocket-server
+        - host: my-workstation
+        - dependency: python-websocket-server
 ...
