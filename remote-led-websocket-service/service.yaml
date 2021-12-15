@@ -9,7 +9,7 @@ imports:
   - nodetypes/actuation_service/actuation_service.yaml
 
 metadata:
-  template_name: "docker"
+  template_name: "fog service orchestration"
   template_author: "UoH"
   template_version: "1.0"
 
@@ -18,7 +18,7 @@ topology_template:
     host_ip:
       type: string
       
-    manager:
+    managers:
       type: list
       default: []
     workers:
@@ -30,42 +30,47 @@ topology_template:
       default: []
 
   node_templates:
-    my-workstation:
+    raspberry-pis:
       type: tosca.nodes.Compute
       attributes:
         private_address: { get_input: host_ip }
         public_address: { get_input: host_ip }
 
     docker-swarm:
-      type: radon.nodes.DockerSwarm
+      type: fog.nodes.DockerSwarm
+      properties:
+        managers: { get_input: managers }
+        workers: { get_input: workers }
       requirements:
-        - host: my-workstation
+        - host: raspberry-pis
 
-    web-server:
-      type: radon.nodes.ServiceContainer
+    nginx-web-server:
+      type: fog.nodes.ServiceContainer
       properties:
         container_name: nginx
         image_name: suvambasak/webpage:websocketled
         published_port: 80
         target_port: 80
-        replicas: 1
+        # replicas: 1
       requirements:
         - host: docker-swarm
 
     python-websocket-server:
-      type: radon.nodes.ServiceContainer
+      type: fog.nodes.ServiceContainer
       properties:
         container_name: websocket_server
         image_name: suvambasak/pyimg:websocketledserver
         published_port: 7890
         target_port: 7890
-        replicas: 1
+        # replicas: 1
       requirements:
         - host: docker-swarm
 
     led-actuators:
-      type: radon.nodes.ActuationService
+      type: fog.nodes.ActuationService
+      properties:
+        actuators: { get_input: actuators }
       requirements:
-        - host: my-workstation
+        - host: raspberry-pis
         - dependency: python-websocket-server
 ...
