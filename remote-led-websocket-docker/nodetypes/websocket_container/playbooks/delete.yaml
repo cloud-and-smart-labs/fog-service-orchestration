@@ -1,9 +1,0 @@
----
-- hosts: all
-  tasks:
-    - name: Remove python websocket Service
-      docker_swarm_service:
-        name: websocket
-        state: absent
-
-...

@@ -1,8 +1,10 @@
 ---
 - hosts: all
+  gather_facts: false
+  
   tasks:
-    - name: Stop LED container
-      shell: ssh pi@{{ item }} "docker container stop rpi-led"
+    - name: Stop privileged container
+      shell: ssh pi@{{ item }} "docker container stop {{ container_name }}"
       loop: "{{ privileged_nodes }}"
 
     - name: Clean up all GPIO

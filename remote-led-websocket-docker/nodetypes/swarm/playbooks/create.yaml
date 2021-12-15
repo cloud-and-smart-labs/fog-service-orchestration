@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  gather_facts: false
+  
   tasks:
     - name: Install prerequsiste Python packages
       pip:
@@ -29,6 +31,6 @@
 
     - name: Join all manager nodes
       shell: ssh pi@{{ item }} "docker swarm join --token {{ token.swarm_facts.JoinTokens.Manager }} {{ ip.stdout }}:2377"
-      loop: "{{ manager }}"
+      loop: "{{ managers }}"
 
 ...
