@@ -30,7 +30,7 @@ topology_template:
       default: []
 
   node_templates:
-    raspberry-pis:
+    fog-workstation:
       type: tosca.nodes.Compute
       attributes:
         private_address: { get_input: host_ip }
@@ -42,7 +42,7 @@ topology_template:
         managers: { get_input: managers }
         workers: { get_input: workers }
       requirements:
-        - host: raspberry-pis
+        - host: fog-workstation
 
     python-websocket-server:
       type: fog.nodes.ServiceContainer
@@ -65,6 +65,7 @@ topology_template:
         # replicas: 1
       requirements:
         - host: docker-swarm
+        - dependency: python-websocket-server
 
     privileged-node-led-actuator:
       type: fog.nodes.PrivilegedContainer
@@ -73,6 +74,6 @@ topology_template:
         image_name: suvambasak/pyimg:websocketledactuator
         privileged_nodes: { get_input: privileged_nodes }
       requirements:
-        - host: raspberry-pis
+        - host: fog-workstation
         - dependency: python-websocket-server
 ...
