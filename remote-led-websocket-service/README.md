@@ -25,10 +25,10 @@ Keep empty list
 manager: []
 ```
 
-### Nodes with sensors and actuators
+### Nodes with actuators
 IP Addresses of nodes
 ```YAML
-sensor_nodes:
+actuators:
   - 192.168.0.222
   - 192.168.0.112
 ```

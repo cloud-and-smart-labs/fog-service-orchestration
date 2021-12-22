@@ -5,12 +5,11 @@ description: Service Template for deploying remote LED in swarm and Priviledged 
 
 imports:
   - nodetypes/swarm/swarm.yaml
-  - nodetypes/webserver_container/webserver_container.yaml
-  - nodetypes/websocket_container/websocket_container.yaml
+  - nodetypes/service_container/service_container.yaml
   - nodetypes/privileged_container/privileged_container.yaml
 
 metadata:
-  template_name: "docker"
+  template_name: "fog service orchestration"
   template_author: "UoH"
   template_version: "1.0"
 
@@ -19,7 +18,7 @@ topology_template:
     host_ip:
       type: string
       
-    manager:
+    managers:
       type: list
       default: []
     workers:
@@ -31,29 +30,50 @@ topology_template:
       default: []
 
   node_templates:
-    my-workstation:
+    fog-workstation:
       type: tosca.nodes.Compute
       attributes:
         private_address: { get_input: host_ip }
         public_address: { get_input: host_ip }
 
     docker-swarm:
-      type: radon.nodes.DockerSwarm
+      type: fog.nodes.DockerSwarm
+      properties:
+        managers: { get_input: managers }
+        workers: { get_input: workers }
       requirements:
-        - host: my-workstation
+        - host: fog-workstation
 
-    websocket:
-      type: radon.nodes.WebsocketContainer
+    python-websocket-server:
+      type: fog.nodes.ServiceContainer
+      properties:
+        container_name: websocket_server
+        image_name: suvambasak/pyimg:websocketledserver
+        published_port: 7890
+        target_port: 7890
+        # replicas: 1
       requirements:
         - host: docker-swarm
 
-    web-server:
-      type: radon.nodes.WebserverContainer
+    nginx-web-server:
+      type: fog.nodes.ServiceContainer
+      properties:
+        container_name: nginx
+        image_name: suvambasak/webpage:websocketled
+        published_port: 80
+        target_port: 80
+        # replicas: 1
       requirements:
         - host: docker-swarm
+        - dependency: python-websocket-server
 
-    privileged-node-led-service:
-      type: radon.nodes.PrivilegedContainer
+    privileged-node-led-actuator:
+      type: fog.nodes.PrivilegedContainer
+      properties:
+        container_name: led_actuator
+        image_name: suvambasak/pyimg:websocketledactuator
+        privileged_nodes: { get_input: privileged_nodes }
       requirements:
-        - host: websocket
+        - host: fog-workstation
+        - dependency: python-websocket-server
 ...

@@ -10,7 +10,7 @@ Deploying a Python Websocket and Nginx Webserver Container on a swarm of Fog Nod
 ### Multiple Manager and Worker
 Add list IP address inside `inputs.yaml`
 ```YAML
-manager:
+managers:
   - 192.168.0.195
 
 workers:
@@ -22,7 +22,7 @@ workers:
 ### If only one Manager
 Keep empty list
 ```YAML
-manager: []
+managers: []
 ```
 
 ### Nodes with sensors and actuators
