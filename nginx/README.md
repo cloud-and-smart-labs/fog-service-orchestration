@@ -6,11 +6,15 @@ Deploying an Nginx Docker Container on a Swarm of Fog Nodes (Raspberry Pis) with
 <br>
 
 ## Configure with `inputs.yaml` file
+IP address of the machine where orchestrator is running.
+```YAML
+leader: 172.17.0.2
+```
 
 ### Multiple Manager and Worker
 Add list IP address inside `inputs.yaml`
 ```YAML
-manager:
+managers:
   - 192.168.0.195
 
 workers:

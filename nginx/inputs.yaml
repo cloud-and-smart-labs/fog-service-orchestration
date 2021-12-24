@@ -1,15 +1,14 @@
 ---
 host_ip: localhost
 
-manager:
-  - 192.168.0.195
+leader: 172.17.0.2
+
+managers: []
 
 workers:
-  - 192.168.0.103
-  - 192.168.0.165
-  - 192.168.0.131
+  - 172.17.0.3
 
-replicas: 7
+replicas: 3
 
-port: 9000
+port: 8080
 ...

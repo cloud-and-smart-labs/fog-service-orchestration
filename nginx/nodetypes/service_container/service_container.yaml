@@ -4,13 +4,20 @@ tosca_definitions_version: tosca_simple_yaml_1_3
 description: Nginx Service node type for Swarm Cluster
 
 node_types:
-  radon.nodes.ServiceContainer:
+  fog.nodes.ServiceContainer:
     derived_from: tosca.nodes.SoftwareComponent
+
+    properties:
+      replicas:
+        type: integer
+        default: []
+      port:
+        type: integer
     
     requirements:
       - host:
           capability: tosca.capabilities.Container
-          node: radon.nodes.DockerSwarm
+          node: fog.nodes.DockerSwarm
           relationship: tosca.relationships.HostedOn
           occurrences: [ 1, 1 ]
 
@@ -18,12 +25,8 @@ node_types:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
         inputs:
-          replicas:
-            default: { get_input: replicas }
-            type: integer
-          port:
-            default: { get_input: port }
-            type: integer
+          replicas: { value: { get_property: [ SELF, replicas ] }, type: integer }
+          port: { value: { get_property: [ SELF, port ] }, type: integer }
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml

@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  gather_facts: false
+  
   tasks:
     - name: Remove nginx service
       docker_swarm_service:

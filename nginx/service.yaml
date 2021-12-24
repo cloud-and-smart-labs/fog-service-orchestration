@@ -16,8 +16,10 @@ topology_template:
   inputs:
     host_ip:
       type: string
-      
-    manager:
+    
+    leader:
+      type: string
+    managers:
       type: list
       default: []
     workers:
@@ -39,12 +41,19 @@ topology_template:
         public_address: { get_input: host_ip }
 
     docker-swarm:
-      type: radon.nodes.DockerSwarm
+      type: fog.nodes.DockerSwarm
+      properties:
+        leader: { get_input: leader }
+        managers: { get_input: managers }
+        workers: { get_input: workers }
       requirements:
         - host: my-workstation
 
     service-nginx:
-      type: radon.nodes.ServiceContainer
+      type: fog.nodes.ServiceContainer
+      properties:
+        port: { get_input: port }
+        replicas: { get_input: replicas }
       requirements:
         - host: docker-swarm
 ...
