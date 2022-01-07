@@ -8,6 +8,8 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
 
     properties:
+      leader:
+        type: string
       managers:
         type: list
         description: List of IP address of managers.
@@ -25,6 +27,7 @@ node_types:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
         inputs:
+          leader: { value: { get_property: [ SELF, leader ] }, type: string }
           managers: { value: { get_property: [ SELF, managers ] }, type: list }
           workers: { value: { get_property: [ SELF, workers ] }, type: list }
         operations:
