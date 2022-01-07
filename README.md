@@ -20,7 +20,7 @@ source .venv/bin/activate
 ```
 ### Install packages
 ```bash
-pip install opera
+pip install opera==0.6.8
 ```
 
 ### Deactivate

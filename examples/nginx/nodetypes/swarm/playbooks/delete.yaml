@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  gather_facts: false
+  
   tasks:
     - name: Removing worker nodes from swarm
       shell: ssh pi@{{ item }} "docker swarm leave"
@@ -7,7 +9,7 @@
 
     - name: Removing manager nodes from swarm
       shell: ssh pi@{{ item }} "docker swarm leave --force"
-      loop: "{{ manager }}"
+      loop: "{{ managers }}"
 
     - name: Removing this node
       docker_swarm:

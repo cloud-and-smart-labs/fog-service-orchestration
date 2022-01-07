@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  gather_facts: false
+  
   tasks:
     - name: Nginx service deploying
       docker_swarm_service:

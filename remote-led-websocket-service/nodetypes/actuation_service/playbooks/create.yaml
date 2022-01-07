@@ -13,15 +13,15 @@
 
 
     - name: Clone the repository
-      shell: ssh pi@{{ item }} "git clone https://github.com/suvambasak/pi-system-service.git"
+      shell: ssh pi@{{ item }} "git clone https://github.com/cloud-and-smart-labs/pi-system-service.git"
       loop: "{{ actuators }}"
 
-    - name: Get the IP address of this machine and register
-      shell: echo $(hostname -I) | awk '{print $1}'
-      register: ip
+    # - name: Get the IP address of this machine and register
+    #   shell: echo $(hostname -I) | awk '{print $1}'
+    #   register: ip
 
     - name: Push configuration
-      shell: ssh pi@{{ item }} "echo '{\"pin\":\"18\",\"ip\":\"{{ ip.stdout }}\"}' > ~/pi-system-service/conf.json"
+      shell: ssh pi@{{ item }} "echo '{\"pin\":\"18\",\"ip\":\"{{ item }}\"}' > ~/pi-system-service/conf.json"
       loop: "{{ actuators }}"
 
     - name: Move the service to the system directory

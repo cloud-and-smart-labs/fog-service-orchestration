@@ -1,0 +1,13 @@
+---
+host_ip: localhost
+
+leader: 192.168.0.157
+
+managers: []
+
+workers: []
+
+replicas: 3
+
+port: 8080
+...

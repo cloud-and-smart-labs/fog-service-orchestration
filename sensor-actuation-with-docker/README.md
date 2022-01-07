@@ -47,20 +47,15 @@ privileged_nodes:
 <br>
 
 ## Deployment of Service
-### Permission change
-```BASH
-chmod +x validate.sh deploy.sh undeploy.sh
-```
-
 ### Validate
 ```BASH
-./validate.sh
+opera validate -i inputs.yaml service.yaml
 ```
 ### Deployment
 ```BASH
-./deploy.sh
+opera deploy -i inputs.yaml service.yaml
 ```
 ### Undeployment
 ```BASH
-./undeploy.sh
+opera undeploy
 ```

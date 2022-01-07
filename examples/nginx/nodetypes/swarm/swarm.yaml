@@ -13,6 +13,7 @@ node_types:
       managers:
         type: list
         description: List of IP address of managers.
+        default: []
       workers:
         type: list
         description: List of IP address of workers.

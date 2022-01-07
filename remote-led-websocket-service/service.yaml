@@ -18,6 +18,8 @@ topology_template:
     host_ip:
       type: string
       
+    leader:
+      type: string
     managers:
       type: list
       default: []
@@ -39,6 +41,7 @@ topology_template:
     docker-swarm:
       type: fog.nodes.DockerSwarm
       properties:
+        leader: { get_input: leader }
         managers: { get_input: managers }
         workers: { get_input: workers }
       requirements:

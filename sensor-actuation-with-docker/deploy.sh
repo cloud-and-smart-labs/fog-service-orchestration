@@ -1,1 +1,0 @@
-opera deploy -i inputs.yaml service.yaml
