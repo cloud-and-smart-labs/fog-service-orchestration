@@ -1,0 +1,28 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - pip==21.3.1
+          - docker==5.0.3
+          - jsondiff==1.3.0
+        state: latest
+        executable: pip3
+
+    - name: Starting docker service
+      service:
+        name: docker
+        state: started
+
+    - name: Init docker swarm and register the join token
+      docker_swarm:
+        state: present
+      register: token
+
+    - name: Set token attributes
+      set_stats:
+        data:
+          manager_token: "{{ token.swarm_facts.JoinTokens.Manager }}"
+          worker_token: "{{ token.swarm_facts.JoinTokens.Worker }}"
