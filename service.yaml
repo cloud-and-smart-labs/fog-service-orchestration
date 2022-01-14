@@ -1,0 +1,71 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_3
+
+description: Service Template under construction
+
+imports:
+  - relationshiptypes/token_transfer/token_transfer.yaml
+  - nodetypes/swarm_leader/swarm_leader.yaml
+  - nodetypes/swarm_worker/swarm_worker.yaml
+  - nodetypes/docker_services/docker_services.yaml
+
+topology_template:
+  node_templates:
+    fog-node-1:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 172.17.0.3
+        public_address: 172.17.0.3
+
+    docker-swarm-leader:
+      type: fog.docker.SwarmLeader
+      requirements:
+        - host: fog-node-1
+
+    fog-node-2:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 172.17.0.4
+        public_address: 172.17.0.4
+
+    docker-swarm-worker-1:
+      type: fog.docker.SwarmWorker
+      properties:
+        ip_addr: 172.17.0.4
+        leader_ip_addrs_port:
+          - "172.17.0.3:2377"
+      requirements:
+        - host: fog-node-2
+        - leader: docker-swarm-leader
+
+    fog-node-3:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 172.17.0.5
+        public_address: 172.17.0.5
+
+    docker-swarm-worker-2:
+      type: fog.docker.SwarmWorker
+      properties:
+        ip_addr: 172.17.0.5
+        leader_ip_addrs_port:
+          - "172.17.0.3:2377"
+      requirements:
+        - host: fog-node-3
+        - leader: docker-swarm-leader
+
+    docker-service-1:
+      type: fog.docker.Services
+      properties:
+        name: mystack
+        url: https://gist.githubusercontent.com/suvambasak/b1dff415a8c6bedb01ba6b177723ae13/raw/31341e80164b12053263e561a7e0f1fb11aa16d8/docker-compose.yaml
+      requirements:
+        - host: docker-swarm-leader
+        - dependency: docker-swarm-worker-1
+        - dependency: docker-swarm-worker-2
+
+  outputs:
+    output_worker_token_attribute:
+      value: { get_attribute: [docker-swarm-leader, worker_token] }
+    output_manager_token_attribute:
+      value: { get_attribute: [docker-swarm-leader, manager_token] }
