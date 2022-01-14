@@ -8,9 +8,11 @@ imports:
   - nodetypes/swarm_leader/swarm_leader.yaml
   - nodetypes/swarm_worker/swarm_worker.yaml
   - nodetypes/docker_services/docker_services.yaml
+  - nodetypes/docker_containers/docker_containers.yaml
 
 topology_template:
   node_templates:
+    # Leader node
     fog-node-1:
       type: tosca.nodes.Compute
       attributes:
@@ -22,6 +24,7 @@ topology_template:
       requirements:
         - host: fog-node-1
 
+    # Worker nodes
     fog-node-2:
       type: tosca.nodes.Compute
       attributes:
@@ -54,6 +57,7 @@ topology_template:
         - host: fog-node-3
         - leader: docker-swarm-leader
 
+    # Docker Service (SWARM)
     docker-service-1:
       type: fog.docker.Services
       properties:
@@ -63,6 +67,34 @@ topology_template:
         - host: docker-swarm-leader
         - dependency: docker-swarm-worker-1
         - dependency: docker-swarm-worker-2
+
+    # Privileged containers
+    privileged_container-1:
+      type: fog.docker.Containers
+      properties:
+        name: TESTNAME
+        url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
+      requirements:
+        - host: fog-node-1
+        - dependency: docker-service-1
+
+    privileged_container-2:
+      type: fog.docker.Containers
+      properties:
+        name: TESTNAME
+        url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
+      requirements:
+        - host: fog-node-2
+        - dependency: docker-service-1
+
+    privileged_container-3:
+      type: fog.docker.Containers
+      properties:
+        name: TESTNAME
+        url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
+      requirements:
+        - host: fog-node-3
+        - dependency: docker-service-1
 
   outputs:
     output_worker_token_attribute:

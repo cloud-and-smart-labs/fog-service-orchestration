@@ -1,0 +1,25 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - PyYAML >= 3.11
+          - docker-compose >= 1.7.0
+        state: latest
+        executable: pip3
+
+    - name: Make the location
+      file:
+        path: /tmp/compose
+        recurse: true
+        state: directory
+
+    - name: Fetch docker-compose file
+      command: "wget -q -O /tmp/compose/docker-compose.yaml {{ url }}"
+
+    - name: Create and start services
+      docker_compose:
+        project_src: /tmp/compose/
+        project_name: "{{ name }}"
