@@ -1,0 +1,18 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - pip==21.3.1
+          - docker==5.0.3
+        state: latest
+        executable: pip3
+
+    - name: Add new node
+      docker_swarm:
+        state: join
+        advertise_addr: "{{ ip_addr }}"
+        join_token: "{{ worker_join_token }}"
+        remote_addrs: "{{ leader_ip_addrs_port }}"
