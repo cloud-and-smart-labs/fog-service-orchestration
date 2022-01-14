@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Set token attributes
+      set_stats:
+        data:
+          manager_token: "{{ manager_token }}"
+          worker_token: "{{ worker_token }}"
