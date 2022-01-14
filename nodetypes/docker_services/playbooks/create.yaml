@@ -1,0 +1,28 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Make the location
+      file:
+        path: /tmp/stack
+        recurse: true
+        state: directory
+
+    - name: Fetch docker-compose file
+      command: "wget -q -O /tmp/stack/docker-compose.yaml {{ url }}"
+
+    - name: Deploy stack from a compose file
+      docker_stack:
+        state: present
+        name: "{{ name }}"
+        compose:
+          - /tmp/stack/docker-compose.yaml
+
+    # - name: Service deploying
+    #   docker_swarm_service:
+    #     name: "{{ container_name }}"
+    #     image: "{{ image_name }}"
+    #     replicas: "{{ replicas }}"
+    #     publish:
+    #       - published_port: "{{ published_port }}"
+    #         target_port: "{{ target_port }}"

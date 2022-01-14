@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Remove stack
+      docker_stack:
+        name: "{{ name }}"
+        state: absent
+
+    - name: Remove the location
+      file:
+        path: /tmp/stack
+        state: absent
+
+    # - name: Remove service service
+    #   docker_swarm_service:
+    #     name: "{{ container_name }}"
+    #     state: absent
