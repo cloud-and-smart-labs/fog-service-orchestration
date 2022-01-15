@@ -2,6 +2,14 @@
 - hosts: all
   gather_facts: false
   tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - PyYAML >= 3.11
+          - jsondiff >= 1.3.0
+        state: latest
+        executable: pip3
+
     - name: Make the location
       file:
         path: /tmp/stack
