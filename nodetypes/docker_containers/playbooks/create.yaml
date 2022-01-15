@@ -16,8 +16,8 @@
         recurse: true
         state: directory
 
-    - name: Fetch docker-compose file
-      command: "wget -q -O /tmp/compose/docker-compose.yaml {{ url }}"
+    - name: Get docker-compose file
+      command: "curl -fsSL {{ url }} -o /tmp/compose/docker-compose.yaml"
 
     - name: Create and start services
       docker_compose:
