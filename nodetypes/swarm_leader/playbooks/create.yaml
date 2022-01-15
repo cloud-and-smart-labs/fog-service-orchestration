@@ -26,3 +26,4 @@
         data:
           manager_token: "{{ token.swarm_facts.JoinTokens.Manager }}"
           worker_token: "{{ token.swarm_facts.JoinTokens.Worker }}"
+          advertise_addr: "{{ advertise_addr }}"

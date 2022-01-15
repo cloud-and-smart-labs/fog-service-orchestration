@@ -11,11 +11,20 @@ node_types:
       manager_token:
         description: Join token for Managers
         type: string
-        default: unavailable
+        default: undefined
       worker_token:
         description: Join token for Workers
         type: string
-        default: unavailable
+        default: undefined
+      advertise_addr:
+        description: Advertised address for joining swarm cluster
+        type: string
+        default: undefined
+
+    requirements:
+      - host:
+          capability: tosca.capabilities.Compute
+          relationship: tosca.relationships.HostedOn
 
     capabilities:
       host:
@@ -26,6 +35,16 @@ node_types:
     interfaces:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
+
+        inputs:
+          advertise_addr:
+            description: Address that will be advertised to other members of the swarm for API access and overlay networking
+            value:
+              concat:
+                - get_attribute: [SELF, host, private_address]
+                - ":2377"
+            type: string
+
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml
