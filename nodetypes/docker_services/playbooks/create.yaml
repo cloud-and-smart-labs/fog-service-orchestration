@@ -9,7 +9,7 @@
         state: directory
 
     - name: Fetch docker-compose file
-      command: "wget -q -O /tmp/stack/docker-compose.yaml {{ url }}"
+      command: "curl -fsSL {{ url }} -o /tmp/stack/docker-compose.yaml"
 
     - name: Deploy stack from a compose file
       docker_stack:
