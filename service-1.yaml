@@ -17,8 +17,8 @@ topology_template:
     fog-node-1:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 172.17.0.3
-        public_address: 172.17.0.3
+        private_address: 192.168.0.166
+        public_address: 192.168.0.166
 
     docker-swarm-leader:
       type: fog.docker.SwarmLeader
@@ -29,15 +29,15 @@ topology_template:
     fog-node-2:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 172.17.0.4
-        public_address: 172.17.0.4
+        private_address: 192.168.0.165
+        public_address: 192.168.0.165
 
     docker-swarm-worker-1:
       type: fog.docker.SwarmWorker
       properties:
-        ip_addr: 172.17.0.4
+        ip_addr: 192.168.0.165
         leader_ip_addrs_port:
-          - "172.17.0.3:2377"
+          - "192.168.0.166:2377"
       requirements:
         - host: fog-node-2
         - leader: docker-swarm-leader
@@ -45,15 +45,15 @@ topology_template:
     fog-node-3:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 172.17.0.5
-        public_address: 172.17.0.5
+        private_address: 192.168.0.103
+        public_address: 192.168.0.103
 
     docker-swarm-worker-2:
       type: fog.docker.SwarmWorker
       properties:
-        ip_addr: 172.17.0.5
+        ip_addr: 192.168.0.103
         leader_ip_addrs_port:
-          - "172.17.0.3:2377"
+          - "192.168.0.166:2377"
       requirements:
         - host: fog-node-3
         - leader: docker-swarm-leader
@@ -63,7 +63,7 @@ topology_template:
       type: fog.docker.Services
       properties:
         name: mystack
-        url: https://gist.githubusercontent.com/suvambasak/b1dff415a8c6bedb01ba6b177723ae13/raw/31341e80164b12053263e561a7e0f1fb11aa16d8/docker-compose.yaml
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/docker-compose.yaml
       requirements:
         - host: docker-swarm-leader
         - dependency: docker-swarm-worker-1
@@ -74,7 +74,7 @@ topology_template:
       type: fog.docker.Containers
       properties:
         name: TESTNAME
-        url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
       requirements:
         - host: fog-node-1
         - dependency: docker-service-1
@@ -83,7 +83,7 @@ topology_template:
       type: fog.docker.Containers
       properties:
         name: TESTNAME
-        url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
       requirements:
         - host: fog-node-2
         - dependency: docker-service-1
@@ -92,7 +92,7 @@ topology_template:
       type: fog.docker.Containers
       properties:
         name: TESTNAME
-        url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
       requirements:
         - host: fog-node-3
         - dependency: docker-service-1
