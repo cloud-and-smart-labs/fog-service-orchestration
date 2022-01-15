@@ -9,7 +9,6 @@ imports:
   - nodetypes/swarm_worker/swarm_worker.yaml
   - nodetypes/docker_services/docker_services.yaml
   - nodetypes/docker_containers/docker_containers.yaml
-  - nodetypes/system_service/system_service.yaml
 
 topology_template:
   node_templates:
@@ -34,10 +33,6 @@ topology_template:
 
     docker-swarm-worker-1:
       type: fog.docker.SwarmWorker
-      properties:
-        ip_addr: 192.168.0.165
-        leader_ip_addrs_port:
-          - "192.168.0.166:2377"
       requirements:
         - host: fog-node-2
         - leader: docker-swarm-leader
@@ -50,10 +45,6 @@ topology_template:
 
     docker-swarm-worker-2:
       type: fog.docker.SwarmWorker
-      properties:
-        ip_addr: 192.168.0.103
-        leader_ip_addrs_port:
-          - "192.168.0.166:2377"
       requirements:
         - host: fog-node-3
         - leader: docker-swarm-leader
@@ -99,6 +90,11 @@ topology_template:
 
   outputs:
     output_worker_token_attribute:
+      description: Swarm join token for worker nodes
       value: { get_attribute: [docker-swarm-leader, worker_token] }
     output_manager_token_attribute:
+      description: Swarm join token for manager nodes
       value: { get_attribute: [docker-swarm-leader, manager_token] }
+    advertised_address:
+      description: Swarm join address
+      value: { get_attribute: [docker-swarm-leader, advertise_addr] }
