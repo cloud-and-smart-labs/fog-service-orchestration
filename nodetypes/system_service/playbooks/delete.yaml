@@ -12,3 +12,9 @@
       file:
         path: /tmp/system-service
         state: absent
+
+    # - name: Uninstall prerequsiste Python packages
+    #   pip:
+    #     name: "{{ packages }}"
+    #     state: absent
+    #     executable: pip3

@@ -2,6 +2,12 @@
 - hosts: all
   gather_facts: false
   tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name: "{{ packages }}"
+        state: latest
+        executable: pip3
+
     - name: Make the location
       file:
         path: /tmp/system-service
