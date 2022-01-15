@@ -17,94 +17,97 @@ topology_template:
     fog-node-1:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 172.17.0.3
-        public_address: 172.17.0.3
+        private_address: 192.168.0.166
+        public_address: 192.168.0.166
 
-    system-service-1:
-      type: fog.system.Service
-      properties:
-        name: demo
-        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/demo/demo.py
-        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/demo/demo.service
+    docker-swarm-leader:
+      type: fog.docker.SwarmLeader
       requirements:
         - host: fog-node-1
 
-    # docker-swarm-leader:
-    #   type: fog.docker.SwarmLeader
-    #   requirements:
-    #     - host: fog-node-1
-
     # Worker nodes
-    # fog-node-2:
-    #   type: tosca.nodes.Compute
-    #   attributes:
-    #     private_address: 172.17.0.4
-    #     public_address: 172.17.0.4
+    fog-node-2:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 192.168.0.165
+        public_address: 192.168.0.165
 
-    # docker-swarm-worker-1:
-    #   type: fog.docker.SwarmWorker
-    #   properties:
-    #     ip_addr: 172.17.0.4
-    #     leader_ip_addrs_port:
-    #       - "172.17.0.3:2377"
-    #   requirements:
-    #     - host: fog-node-2
-    #     - leader: docker-swarm-leader
+    docker-swarm-worker-1:
+      type: fog.docker.SwarmWorker
+      properties:
+        ip_addr: 192.168.0.165
+        leader_ip_addrs_port:
+          - "192.168.0.166:2377"
+      requirements:
+        - host: fog-node-2
+        - leader: docker-swarm-leader
 
-    # fog-node-3:
-    #   type: tosca.nodes.Compute
-    #   attributes:
-    #     private_address: 172.17.0.5
-    #     public_address: 172.17.0.5
+    fog-node-3:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 192.168.0.103
+        public_address: 192.168.0.103
 
-    # docker-swarm-worker-2:
-    #   type: fog.docker.SwarmWorker
-    #   properties:
-    #     ip_addr: 172.17.0.5
-    #     leader_ip_addrs_port:
-    #       - "172.17.0.3:2377"
-    #   requirements:
-    #     - host: fog-node-3
-    #     - leader: docker-swarm-leader
+    docker-swarm-worker-2:
+      type: fog.docker.SwarmWorker
+      properties:
+        ip_addr: 192.168.0.103
+        leader_ip_addrs_port:
+          - "192.168.0.166:2377"
+      requirements:
+        - host: fog-node-3
+        - leader: docker-swarm-leader
 
     # Docker Service (SWARM)
-    # docker-service-1:
-    #   type: fog.docker.Services
-    #   properties:
-    #     name: mystack
-    #     url: https://gist.githubusercontent.com/suvambasak/b1dff415a8c6bedb01ba6b177723ae13/raw/31341e80164b12053263e561a7e0f1fb11aa16d8/docker-compose.yaml
-    #   requirements:
-    #     - host: docker-swarm-leader
-    #     - dependency: docker-swarm-worker-1
-    #     - dependency: docker-swarm-worker-2
+    docker-service-1:
+      type: fog.docker.Services
+      properties:
+        name: mystack
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/docker-compose.yaml
+      requirements:
+        - host: docker-swarm-leader
+        - dependency: docker-swarm-worker-1
+        - dependency: docker-swarm-worker-2
 
-    # Privileged containers
-    # privileged_container-1:
-    #   type: fog.docker.Containers
-    #   properties:
-    #     name: TESTNAME
-    #     url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
-    #   requirements:
-    #     - host: fog-node-1
-    #     - dependency: docker-service-1
+    # System services
+    system-service-1:
+      type: fog.system.Service
+      properties:
+        name: led-websocket
+        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
+        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service
+        packages:
+          - rpi.gpio
+          - websockets
+      requirements:
+        - host: fog-node-1
+        - dependency: docker-service-1
 
-    # privileged_container-2:
-    #   type: fog.docker.Containers
-    #   properties:
-    #     name: TESTNAME
-    #     url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
-    #   requirements:
-    #     - host: fog-node-2
-    #     - dependency: docker-service-1
+    system-service-2:
+      type: fog.system.Service
+      properties:
+        name: led-websocket
+        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
+        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service
+        packages:
+          - rpi.gpio
+          - websockets
+      requirements:
+        - host: fog-node-2
+        - dependency: docker-service-1
 
-    # privileged_container-3:
-    #   type: fog.docker.Containers
-    #   properties:
-    #     name: TESTNAME
-    #     url: https://gist.githubusercontent.com/suvambasak/e08e13058ad7e7f828662a511d3accfd/raw/23a5e6c2c907a066ccd477874fbdec45ff3d3862/docker-compose.yaml
-    #   requirements:
-    #     - host: fog-node-3
-    #     - dependency: docker-service-1
+    system-service-3:
+      type: fog.system.Service
+      properties:
+        name: led-websocket
+        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
+        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service
+        packages:
+          - rpi.gpio
+          - websockets
+      requirements:
+        - host: fog-node-3
+        - dependency: docker-service-1
 
   outputs:
     output_worker_token_attribute:
