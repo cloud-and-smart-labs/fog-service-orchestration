@@ -23,13 +23,20 @@ node_types:
       - dependency:
           capability: tosca.capabilities.Container
           relationship: tosca.relationships.DependsOn
-          occurrences: [1, UNBOUNDED]
+          occurrences: [0, UNBOUNDED]
 
     interfaces:
       Standard:
+        type: tosca.interfaces.node.lifecycle.Standard
+
         inputs:
-          name: { value: { get_property: [SELF, name] }, type: string }
-          url: { value: { get_property: [SELF, url] }, type: string }
+          name:
+            value: { get_property: [SELF, name] }
+            type: string
+          url:
+            value: { get_property: [SELF, url] }
+            type: string
+
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml
