@@ -15,4 +15,5 @@
         state: join
         advertise_addr: "{{ ip_addr }}"
         join_token: "{{ worker_join_token }}"
-        remote_addrs: "{{ leader_ip_addrs_port }}"
+        remote_addrs:
+          - "{{ join_addr_port }}"

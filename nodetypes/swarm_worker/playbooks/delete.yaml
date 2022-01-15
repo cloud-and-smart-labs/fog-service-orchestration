@@ -6,9 +6,9 @@
       docker_swarm:
         state: absent
 
-    - name: Uninstall prerequsiste Python packages
-      pip:
-        name:
-          - docker==5.0.3
-        state: absent
-        executable: pip3
+    # - name: Uninstall prerequsiste Python packages
+    #   pip:
+    #     name:
+    #       - docker==5.0.3
+    #     state: absent
+    #     executable: pip3
