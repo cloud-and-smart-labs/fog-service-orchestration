@@ -21,9 +21,16 @@ node_types:
         description: Python Dependencies
         type: list
 
+    requirements:
+      - host:
+          capability: tosca.capabilities.Compute
+          relationship: tosca.relationships.HostedOn
+          occurrences: [1, 1]
+
     interfaces:
       Standard:
         type: tosca.interfaces.node.lifecycle.Standard
+
         inputs:
           script_name:
             value: { concat: [get_property: [SELF, name], ".py"] }
@@ -32,10 +39,19 @@ node_types:
             value: { concat: [get_property: [SELF, name], ".service"] }
             type: string
           script_url:
-            { value: { get_property: [SELF, script_url] }, type: string }
+            value: { get_property: [SELF, script_url] }
+            type: string
           service_url:
-            { value: { get_property: [SELF, service_url] }, type: string }
-          packages: { value: { get_property: [SELF, packages] }, type: list }
+            value: { get_property: [SELF, service_url] }
+            type: string
+          packages:
+            value: { get_property: [SELF, packages] }
+            type: list
+          ip_addr:
+            description: host IP address
+            value: { get_attribute: [SELF, host, private_address] }
+            type: string
+
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml
