@@ -7,3 +7,4 @@
         data:
           manager_token: "{{ manager_token }}"
           worker_token: "{{ worker_token }}"
+          join_addr_port: "{{ join_addr_port }}"
