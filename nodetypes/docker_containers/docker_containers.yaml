@@ -17,15 +17,26 @@ node_types:
 
     requirements:
       - host:
-          capability: tosca.capabilities.Container
+          capability: tosca.capabilities.Compute
           relationship: tosca.relationships.HostedOn
           occurrences: [1, 1]
 
     interfaces:
       Standard:
+        type: tosca.interfaces.node.lifecycle.Standard
+
         inputs:
-          name: { value: { get_property: [SELF, name] }, type: string }
-          url: { value: { get_property: [SELF, url] }, type: string }
+          name:
+            value: { get_property: [SELF, name] }
+            type: string
+          url:
+            value: { get_property: [SELF, url] }
+            type: string
+          ip_addr:
+            description: host IP address
+            value: { get_attribute: [SELF, host, private_address] }
+            type: string
+
         operations:
           create: playbooks/create.yaml
           delete: playbooks/delete.yaml
