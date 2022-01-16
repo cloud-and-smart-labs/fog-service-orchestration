@@ -3,6 +3,11 @@ tosca_definitions_version: tosca_simple_yaml_1_3
 
 description: Service Template for remote LED with system services
 
+metadata:
+  template_name: "fog service orchestration for LEDs"
+  template_author: "UoH"
+  template_version: "2.0"
+
 imports:
   - relationshiptypes/token_transfer/token_transfer.yaml
   - nodetypes/swarm_leader/swarm_leader.yaml
