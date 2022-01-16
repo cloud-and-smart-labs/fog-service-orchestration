@@ -1,7 +1,7 @@
 ---
 tosca_definitions_version: tosca_simple_yaml_1_3
 
-description: Service Template under construction
+description: Service Template for remote LED with system services
 
 imports:
   - relationshiptypes/token_transfer/token_transfer.yaml
@@ -11,37 +11,56 @@ imports:
   - nodetypes/system_service/system_service.yaml
 
 topology_template:
+  inputs:
+    docker_service_name:
+      type: string
+      description: Docker stack name
+    docker_service_url:
+      type: string
+      description: Docker stack compose file URL
+
+    system_service_name:
+      type: string
+      description: Systemctl service name
+    system_service_script_url:
+      type: string
+      description: Python script
+    system_service_service_url:
+      type: string
+      description: .service file
+
   node_templates:
-    # Leader node
+    # All fog nodes
     fog-node-1:
       type: tosca.nodes.Compute
       attributes:
         private_address: 192.168.0.166
         public_address: 192.168.0.166
 
-    docker-swarm-leader:
-      type: fog.docker.SwarmLeader
-      requirements:
-        - host: fog-node-1
-
-    # Worker nodes
     fog-node-2:
       type: tosca.nodes.Compute
       attributes:
         private_address: 192.168.0.165
         public_address: 192.168.0.165
 
-    docker-swarm-worker-1:
-      type: fog.docker.SwarmWorker
-      requirements:
-        - host: fog-node-2
-        - leader: docker-swarm-leader
-
     fog-node-3:
       type: tosca.nodes.Compute
       attributes:
         private_address: 192.168.0.103
         public_address: 192.168.0.103
+
+    # Swarm leader node
+    docker-swarm-leader:
+      type: fog.docker.SwarmLeader
+      requirements:
+        - host: fog-node-1
+
+    # Swarm worker nodes
+    docker-swarm-worker-1:
+      type: fog.docker.SwarmWorker
+      requirements:
+        - host: fog-node-2
+        - leader: docker-swarm-leader
 
     docker-swarm-worker-2:
       type: fog.docker.SwarmWorker
@@ -53,8 +72,8 @@ topology_template:
     docker-service-1:
       type: fog.docker.Services
       properties:
-        name: mystack
-        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/docker-compose.yaml
+        name: { get_input: docker_service_name }
+        url: { get_input: docker_service_url }
       requirements:
         - host: docker-swarm-leader
         - dependency: docker-swarm-worker-1
@@ -64,9 +83,9 @@ topology_template:
     system-service-1:
       type: fog.system.Service
       properties:
-        name: led-websocket
-        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
-        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service
+        name: { get_input: system_service_name }
+        script_url: { get_input: system_service_script_url }
+        service_url: { get_input: system_service_service_url }
         packages:
           - rpi.gpio
           - websockets
@@ -77,9 +96,9 @@ topology_template:
     system-service-2:
       type: fog.system.Service
       properties:
-        name: led-websocket
-        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
-        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service
+        name: { get_input: system_service_name }
+        script_url: { get_input: system_service_script_url }
+        service_url: { get_input: system_service_service_url }
         packages:
           - rpi.gpio
           - websockets
@@ -90,9 +109,9 @@ topology_template:
     system-service-3:
       type: fog.system.Service
       properties:
-        name: led-websocket
-        script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
-        service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service
+        name: { get_input: system_service_name }
+        script_url: { get_input: system_service_script_url }
+        service_url: { get_input: system_service_service_url }
         packages:
           - rpi.gpio
           - websockets
