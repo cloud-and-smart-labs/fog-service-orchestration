@@ -10,7 +10,7 @@ node_types:
     properties:
       name:
         type: string
-        description: Docker Stack name
+        description: Docker compose project name
       url:
         type: string
         description: Docker Compose file URL
