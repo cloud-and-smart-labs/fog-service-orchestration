@@ -24,7 +24,7 @@ docker-service-1:
   type: fog.docker.Services
   properties:
     name: service_name
-    url: https://cloud-and-smart-labs/docker-compose.yaml
+    url: https://cloud-and-smart-labs.dev/docker-compose.yaml
   requirements:
     - host: docker-swarm-leader
     - dependency: docker-swarm-worker-1

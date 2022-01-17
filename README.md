@@ -1,10 +1,10 @@
 # Fog Service Orchestration
-Dynamic deployment of the services on fog nodes (Raspberry Pi) on the fly with `TOSCA Service Template` and `Opera` a lightweight orchestrator. 
+Dynamic deployment of the services on fog nodes (Raspberry Pi) on the fly with `TOSCA Service Template` and `xOpera` a lightweight orchestrator. 
 
-| Tools | |
+| Tech Stack | Links |
 | --- |:---:|
 | Standard | [OASIS TOSCA](https://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.3/TOSCA-Simple-Profile-YAML-v1.3.html) |
-| Orchestrator | [Opera](https://xlab-si.github.io/xopera-docs/cli.html) |
+| Orchestrator | [xOpera](https://xlab-si.github.io/xopera-docs/cli.html) |
 | Implementation | [Ansible](https://www.ansible.com/) |
 
 ## Table of Contents
@@ -30,7 +30,7 @@ Activate python virtual environment
 source .venv/bin/activate
 ```
 ### Install Orchestrator
-The xOpera orchestrator tool is available on [PyPI](https://pypi.org/project/opera/).
+The xOpera orchestrator tool is available on [`PyPI`](https://pypi.org/project/opera/).
 ```bash
 pip install opera==0.6.8
 ```
@@ -58,11 +58,11 @@ deactivate
 ```
 
 ## Orchestration
-TOSCA Sevice Template validation, deployment, and undeployment with xOpera. Check out xOpera CLI documentation [here](https://xlab-si.github.io/xopera-docs/cli.html).
+TOSCA Sevice Template validation, deployment, and undeployment with `xOpera`. Check out `xOpera CLI` documentation [here](https://xlab-si.github.io/xopera-docs/cli.html).
 
 ### Validate
 Validate TOSCA Service Templates <br>
--e: executors (Ansible Playbooks) behind them
+`-e`: executors (Ansible Playbooks) behind them
 ```bash
 opera validate -e -i inputs-1.yaml service-1.yaml 
 ```
@@ -110,8 +110,8 @@ Done.
 ```
 ### Deploy
 Deploy TOSCA Service Templates <br>
--i: Input file
--w: Number of concurrent threads
+`-i`: Input file <br>
+`-w`: Number of concurrent threads
 ```bash
 opera deploy -w 3  -i inputs-1.yaml service-1.yaml
 ```
@@ -151,7 +151,7 @@ If the deployment of the services is successful.
 
 ### Undeploy
 Undeploy TOSCA Service Templates <br>
--w: Number of concurrent threads
+`-w`: Number of concurrent threads
 ```bash
 opera undeploy -w 3
 ```
@@ -196,11 +196,11 @@ If the undeployment of the services is successful.
 ## Node Types
 | [Node Types](nodetypes) | Description |
 |---|---|
-| [Docker Containers](nodetypes/docker_containers) | Deploy/Undeploy Docker Container from a `docker-compose.yaml` file |
-| [Docker Services](nodetypes/docker_services) | Deploy/Undeploy Docker Stack from a `docker-compose.yaml` file |
-| [Swarm Leader](nodetypes/swarm_leader) | Node type for Docker Swarm Leader |
-| [Swarm Worker](nodetypes/swarm_worker) | Node type for Docker Swarm Worker |
-| [System Service](nodetypes/system_service) | Node type for `systemctl` service |
+| [Docker Containers](nodetypes/docker_containers) | Deploy/Undeploy Docker Containers from a `docker-compose.yaml` file. |
+| [Docker Services](nodetypes/docker_services) | Deploy/Undeploy Docker Stack from a `docker-compose.yaml` file. |
+| [Swarm Leader](nodetypes/swarm_leader) | Node type for Docker Swarm Leader. |
+| [Swarm Worker](nodetypes/swarm_worker) | Node type for Docker Swarm Worker. |
+| [System Service](nodetypes/system_service) | Node type for `systemctl` service. |
 
 ## Relationship Types
 | [Relationship Types](/relationshiptypes) | Description |

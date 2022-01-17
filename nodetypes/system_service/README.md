@@ -25,8 +25,8 @@ system-service-1:
   type: fog.system.Service
   properties:
     name: service_name
-    script_url: https://cloud-and-smart-labs/led-websocket.py
-    service_url: https://cloud-and-smart-labs/led-websocket.service
+    script_url: https://cloud-and-smart-labs.dev/led-websocket.py
+    service_url: https://cloud-and-smart-labs.dev/led-websocket.service
     packages:
       - rpi.gpio
       - websockets
