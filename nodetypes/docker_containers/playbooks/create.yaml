@@ -16,8 +16,10 @@
         recurse: true
         state: directory
 
-    - name: Get docker-compose file
-      command: "curl -fsSL {{ url }} -o /tmp/compose/docker-compose.yaml"
+    - name: Download docker-compose file
+      get_url:
+        url: "{{ url }}"
+        dest: /tmp/compose/docker-compose.yaml
 
     - name: Create and start services
       docker_compose:

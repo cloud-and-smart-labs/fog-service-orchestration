@@ -14,11 +14,15 @@
         recurse: true
         state: directory
 
-    - name: Get python script
-      command: "curl -fsSL {{ script_url }} -o /tmp/system-service/{{ script_name }}"
+    - name: Download Python script
+      get_url:
+        url: "{{ script_url }}"
+        dest: "/tmp/system-service/{{ script_name }}"
 
-    - name: Get service file Service
-      command: "curl -fsSL {{ service_url }} -o /tmp/system-service/{{ service_name }}"
+    - name: Download service file
+      get_url:
+        url: "{{ service_url }}"
+        dest: "/tmp/system-service/{{ service_name }}"
 
     - name: Move file into system directory
       command: "sudo mv /tmp/system-service/{{ service_name }} /etc/systemd/system/{{ service_name }}"
