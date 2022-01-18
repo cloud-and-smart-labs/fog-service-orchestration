@@ -1,0 +1,7 @@
+---
+docker_service_name: mystack
+docker_service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/docker-compose.yaml
+
+system_service_name: led-websocket
+system_service_script_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py
+system_service_service_url: https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service

@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Stop the service
+      command: "sudo systemctl stop {{ service_name }}"
+
+    - name: Remove the service
+      command: "sudo rm /etc/systemd/system/{{ service_name }}"
+
+    - name: Remove location
+      file:
+        path: /tmp/system-service
+        state: absent
+
+    # - name: Uninstall prerequsiste Python packages
+    #   pip:
+    #     name: "{{ packages }}"
+    #     state: absent
+    #     executable: pip3

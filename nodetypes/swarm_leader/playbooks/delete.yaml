@@ -1,0 +1,16 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Removing this node
+      docker_swarm:
+        state: absent
+        force: true
+
+    # - name: Uninstall prerequsiste Python packages
+    #   pip:
+    #     name:
+    #       - docker==5.0.3
+    #       - jsondiff==1.3.0
+    #     state: absent
+    #     executable: pip3

@@ -1,0 +1,44 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_3
+
+description: Docker Swarm Worker
+
+node_types:
+  fog.docker.SwarmWorker:
+    derived_from: tosca.nodes.SoftwareComponent
+
+    requirements:
+      - leader:
+          capability: tosca.capabilities.Node
+          relationship: fog.docker.swarm.relationships.TokenTransfer
+      - host:
+          capability: tosca.capabilities.Compute
+          relationship: tosca.relationships.HostedOn
+
+    capabilities:
+      host:
+        type: tosca.capabilities.Container
+        occurrences: [0, UNBOUNDED]
+        valid_source_types: [fog.docker.Services]
+
+    interfaces:
+      Standard:
+        type: tosca.interfaces.node.lifecycle.Standard
+
+        inputs:
+          worker_join_token:
+            description: Swarm join token as worker
+            value: { get_attribute: [SELF, leader, worker_token] }
+            type: string
+          ip_addr:
+            description: host IP address
+            value: { get_attribute: [SELF, host, private_address] }
+            type: string
+          join_addr_port:
+            description: Swarm manager advertised address
+            value: { get_attribute: [SELF, leader, advertise_addr] }
+            type: string
+
+        operations:
+          create: playbooks/create.yaml
+          delete: playbooks/delete.yaml

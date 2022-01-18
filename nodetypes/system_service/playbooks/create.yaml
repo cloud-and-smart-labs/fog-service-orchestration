@@ -1,0 +1,37 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name: "{{ packages }}"
+        state: latest
+        executable: pip3
+
+    - name: Make the location
+      file:
+        path: /tmp/system-service
+        recurse: true
+        state: directory
+
+    - name: Download Python script
+      get_url:
+        url: "{{ script_url }}"
+        dest: "/tmp/system-service/{{ script_name }}"
+
+    - name: Download service file
+      get_url:
+        url: "{{ service_url }}"
+        dest: "/tmp/system-service/{{ service_name }}"
+
+    - name: Move file into system directory
+      command: "sudo mv /tmp/system-service/{{ service_name }} /etc/systemd/system/{{ service_name }}"
+
+    - name: Reload the systemctl daemon
+      command: "sudo systemctl daemon-reload"
+
+    - name: Enable the service
+      command: "sudo systemctl enable {{ service_name }}"
+
+    - name: Start the service
+      command: "sudo systemctl start {{ service_name }}"

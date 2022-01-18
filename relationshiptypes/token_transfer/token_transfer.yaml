@@ -1,0 +1,30 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_3
+
+description: Relationship for attribute mapping join token transfer
+
+relationship_types:
+  fog.docker.swarm.relationships.TokenTransfer:
+    derived_from: tosca.relationships.DependsOn
+    attributes:
+      manager_token:
+        type: string
+      worker_token:
+        type: string
+      join_addr_port:
+        type: string
+    interfaces:
+      Configure:
+        operations:
+          pre_configure_source:
+            inputs:
+              manager_token:
+                value: { get_attribute: [TARGET, manager_token] }
+                type: string
+              worker_token:
+                value: { get_attribute: [TARGET, worker_token] }
+                type: string
+              join_addr_port:
+                value: { get_attribute: [TARGET, advertise_addr] }
+                type: string
+            implementation: playbooks/pre_configure_source.yaml

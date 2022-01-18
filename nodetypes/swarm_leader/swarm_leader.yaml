@@ -1,0 +1,50 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_3
+
+description: Docker Swarm Leader
+
+node_types:
+  fog.docker.SwarmLeader:
+    derived_from: tosca.nodes.SoftwareComponent
+
+    attributes:
+      manager_token:
+        description: Join token for Managers
+        type: string
+        default: undefined
+      worker_token:
+        description: Join token for Workers
+        type: string
+        default: undefined
+      advertise_addr:
+        description: Advertised address for joining swarm cluster
+        type: string
+        default: undefined
+
+    requirements:
+      - host:
+          capability: tosca.capabilities.Compute
+          relationship: tosca.relationships.HostedOn
+
+    capabilities:
+      host:
+        type: tosca.capabilities.Container
+        occurrences: [0, UNBOUNDED]
+        valid_source_types: [fog.docker.Services]
+
+    interfaces:
+      Standard:
+        type: tosca.interfaces.node.lifecycle.Standard
+
+        inputs:
+          advertise_addr:
+            description: Address that will be advertised to other members of the swarm for API access and overlay networking
+            value:
+              concat:
+                - get_attribute: [SELF, host, private_address]
+                - ":2377"
+            type: string
+
+        operations:
+          create: playbooks/create.yaml
+          delete: playbooks/delete.yaml

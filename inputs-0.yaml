@@ -1,0 +1,5 @@
+---
+node_1: 172.17.0.3
+node_2: 172.17.0.4
+
+compose_file: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/demo/docker-compose.yaml

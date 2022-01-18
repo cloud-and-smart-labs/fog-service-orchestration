@@ -1,0 +1,38 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - PyYAML >= 3.11
+          - jsondiff >= 1.3.0
+        state: latest
+        executable: pip3
+
+    - name: Make the location
+      file:
+        path: /tmp/stack
+        recurse: true
+        state: directory
+
+    - name: Download docker-compose file
+      get_url:
+        url: "{{ url }}"
+        dest: /tmp/stack/docker-compose.yaml
+
+    - name: Deploy stack from a compose file
+      docker_stack:
+        state: present
+        name: "{{ name }}"
+        compose:
+          - /tmp/stack/docker-compose.yaml
+
+    # - name: Service deploying
+    #   docker_swarm_service:
+    #     name: "{{ container_name }}"
+    #     image: "{{ image_name }}"
+    #     replicas: "{{ replicas }}"
+    #     publish:
+    #       - published_port: "{{ published_port }}"
+    #         target_port: "{{ target_port }}"

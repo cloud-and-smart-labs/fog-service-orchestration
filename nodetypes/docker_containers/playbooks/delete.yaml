@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Down service
+      docker_compose:
+        project_src: /tmp/compose/
+        project_name: "{{ name }}"
+        state: absent
+
+    - name: Remove the location
+      file:
+        path: /tmp/compose
+        state: absent

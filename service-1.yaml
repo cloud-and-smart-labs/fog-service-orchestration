@@ -1,0 +1,118 @@
+---
+tosca_definitions_version: tosca_simple_yaml_1_3
+
+description: Service Template for remote LED with privileged containers
+
+metadata:
+  template_name: "fog service orchestration for LEDs"
+  template_author: "UoH"
+  template_version: "2.0"
+
+imports:
+  - relationshiptypes/token_transfer/token_transfer.yaml
+  - nodetypes/swarm_leader/swarm_leader.yaml
+  - nodetypes/swarm_worker/swarm_worker.yaml
+  - nodetypes/docker_services/docker_services.yaml
+  - nodetypes/docker_containers/docker_containers.yaml
+
+topology_template:
+  inputs:
+    docker_service_name:
+      type: string
+      description: Docker stack name
+    docker_service_url:
+      type: string
+      description: Docker stack compose file URL
+    docker_compose_name:
+      type: string
+      description: Docker compose name
+    docker_compose_url:
+      type: string
+      description: Docker compose file URL
+
+  node_templates:
+    # All fog nodes
+    fog-node-1:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 192.168.0.166
+        public_address: 192.168.0.166
+    fog-node-2:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 192.168.0.165
+        public_address: 192.168.0.165
+    fog-node-3:
+      type: tosca.nodes.Compute
+      attributes:
+        private_address: 192.168.0.103
+        public_address: 192.168.0.103
+
+    # Swarm leader node
+    docker-swarm-leader:
+      type: fog.docker.SwarmLeader
+      requirements:
+        - host: fog-node-1
+
+    # Swarm worker nodes
+    docker-swarm-worker-1:
+      type: fog.docker.SwarmWorker
+      requirements:
+        - host: fog-node-2
+        - leader: docker-swarm-leader
+
+    docker-swarm-worker-2:
+      type: fog.docker.SwarmWorker
+      requirements:
+        - host: fog-node-3
+        - leader: docker-swarm-leader
+
+    # Docker Service (SWARM)
+    docker-service-1:
+      type: fog.docker.Services
+      properties:
+        name: { get_input: docker_service_name }
+        url: { get_input: docker_service_url }
+      requirements:
+        - host: docker-swarm-leader
+        - dependency: docker-swarm-worker-1
+        - dependency: docker-swarm-worker-2
+
+    # Privileged containers
+    privileged_container-1:
+      type: fog.docker.Containers
+      properties:
+        name: { get_input: docker_compose_name }
+        url: { get_input: docker_compose_url }
+      requirements:
+        - host: fog-node-1
+        - dependency: docker-service-1
+
+    privileged_container-2:
+      type: fog.docker.Containers
+      properties:
+        name: { get_input: docker_compose_name }
+        url: { get_input: docker_compose_url }
+      requirements:
+        - host: fog-node-2
+        - dependency: docker-service-1
+
+    privileged_container-3:
+      type: fog.docker.Containers
+      properties:
+        name: { get_input: docker_compose_name }
+        url: { get_input: docker_compose_url }
+      requirements:
+        - host: fog-node-3
+        - dependency: docker-service-1
+
+  outputs:
+    output_worker_token_attribute:
+      description: Swarm join token for worker nodes
+      value: { get_attribute: [docker-swarm-leader, worker_token] }
+    output_manager_token_attribute:
+      description: Swarm join token for manager nodes
+      value: { get_attribute: [docker-swarm-leader, manager_token] }
+    advertised_address:
+      description: Swarm join address
+      value: { get_attribute: [docker-swarm-leader, advertise_addr] }
