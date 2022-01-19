@@ -12,14 +12,14 @@ Pulls scripts and configuration files from the given URL and creates a backgroun
 | name | string | Service name |
 | script_url | string | Fetch the Python script |
 | service_url | string | Fetch the `systemctl` service file |
-| packages | list | List of the required Python packages |
+| packages | list | List of the required Python packages (default empty) |
 
 ## Requirements
 | Requirement | Type |Purpose |
 | --- | --- | --- |
 | host | HostedOn | Needs to be hosted on compute node |
 
-## Example
+## Examples
 ```yaml
 system-service-1:
   type: fog.system.Service
@@ -33,5 +33,16 @@ system-service-1:
   requirements:
     - host: fog-node-1
     - dependency: docker-service-1
+```
 
+```yaml
+system-service-1:
+  type: fog.system.Service
+  properties:
+    name: service_name
+    script_url: https://cloud-and-smart-labs.dev/led-websocket.py
+    service_url: https://cloud-and-smart-labs.dev/led-websocket.service
+  requirements:
+    - host: fog-node-1
+    - dependency: docker-service-1
 ```

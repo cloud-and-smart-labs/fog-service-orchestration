@@ -29,6 +29,9 @@ topology_template:
     docker_compose_url:
       type: string
       description: Docker compose file URL
+    packages:
+      type: list
+      description: Privileged Container dependency packages
 
   node_templates:
     # All fog nodes
@@ -84,6 +87,7 @@ topology_template:
       properties:
         name: { get_input: docker_compose_name }
         url: { get_input: docker_compose_url }
+        packages: { get_input: packages }
       requirements:
         - host: fog-node-1
         - dependency: docker-service-1
@@ -93,6 +97,7 @@ topology_template:
       properties:
         name: { get_input: docker_compose_name }
         url: { get_input: docker_compose_url }
+        packages: { get_input: packages }
       requirements:
         - host: fog-node-2
         - dependency: docker-service-1
@@ -102,6 +107,7 @@ topology_template:
       properties:
         name: { get_input: docker_compose_name }
         url: { get_input: docker_compose_url }
+        packages: { get_input: packages }
       requirements:
         - host: fog-node-3
         - dependency: docker-service-1

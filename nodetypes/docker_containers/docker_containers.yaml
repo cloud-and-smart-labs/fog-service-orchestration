@@ -14,6 +14,10 @@ node_types:
       url:
         type: string
         description: Docker Compose file URL
+      packages:
+        description: Python Dependencies for the Privileged Container
+        type: list
+        default: []
 
     requirements:
       - host:
@@ -36,6 +40,9 @@ node_types:
             description: host IP address
             value: { get_attribute: [SELF, host, private_address] }
             type: string
+          packages:
+            value: { get_property: [SELF, packages] }
+            type: list
 
         operations:
           create: playbooks/create.yaml
