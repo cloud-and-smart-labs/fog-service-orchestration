@@ -10,6 +10,12 @@
         state: latest
         executable: pip3
 
+    - name: Install prerequsiste Python packages for Privileged Container
+      pip:
+        name: "{{ packages }}"
+        state: latest
+        executable: pip3
+
     - name: Make the location
       file:
         path: /tmp/compose

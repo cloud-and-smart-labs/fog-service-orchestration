@@ -20,6 +20,7 @@ node_types:
       packages:
         description: Python Dependencies
         type: list
+        default: []
 
     requirements:
       - host:
