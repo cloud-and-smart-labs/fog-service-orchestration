@@ -11,4 +11,3 @@ docker_compose_name: TESTNAME
 docker_compose_url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
 packages:
   - websockets
-  - RPi.GPIO
