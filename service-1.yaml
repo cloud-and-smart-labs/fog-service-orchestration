@@ -38,13 +38,13 @@ topology_template:
     fog-node-1:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 192.168.0.166
-        public_address: 192.168.0.166
+        private_address: 192.168.0.120
+        public_address: 192.168.0.120
     fog-node-2:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 192.168.0.165
-        public_address: 192.168.0.165
+        private_address: 192.168.0.167
+        public_address: 192.168.0.167
     fog-node-3:
       type: tosca.nodes.Compute
       attributes:
