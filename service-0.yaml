@@ -18,13 +18,10 @@ topology_template:
   inputs:
     node_1:
       type: string
-      description: Input IP address of the node_1
+      description: Input IP address of node_1
     node_2:
       type: string
-      description: Input IP address for node_2
-    compose_file:
-      type: string
-      description: URL of the compose file
+      description: Input IP address of node_2
 
   node_templates:
     # All fog nodes
@@ -57,7 +54,7 @@ topology_template:
       type: fog.docker.Services
       properties:
         name: demo
-        url: { get_input: compose_file }
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/demo/docker-compose.yaml
       requirements:
         - host: docker-swarm-leader
         - dependency: docker-swarm-worker-1

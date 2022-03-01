@@ -17,39 +17,33 @@ imports:
 
 topology_template:
   inputs:
-    docker_service_name:
+    node_1:
       type: string
-      description: Docker stack name
-    docker_service_url:
+      description: Input IP address of node_1
+    node_2:
       type: string
-      description: Docker stack compose file URL
-    docker_compose_name:
+      description: Input IP address of node_2
+    node_3:
       type: string
-      description: Docker compose name
-    docker_compose_url:
-      type: string
-      description: Docker compose file URL
-    packages:
-      type: list
-      description: Privileged Container dependency packages
+      description: Input IP address of node_3
 
   node_templates:
     # All fog nodes
     fog-node-1:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 192.168.0.120
-        public_address: 192.168.0.120
+        private_address: { get_input: node_1 }
+        public_address: { get_input: node_1 }
     fog-node-2:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 192.168.0.167
-        public_address: 192.168.0.167
+        private_address: { get_input: node_2 }
+        public_address: { get_input: node_2 }
     fog-node-3:
       type: tosca.nodes.Compute
       attributes:
-        private_address: 192.168.0.103
-        public_address: 192.168.0.103
+        private_address: { get_input: node_3 }
+        public_address: { get_input: node_3 }
 
     # Swarm leader node
     docker-swarm-leader:
@@ -74,8 +68,8 @@ topology_template:
     docker-service-1:
       type: fog.docker.Services
       properties:
-        name: { get_input: docker_service_name }
-        url: { get_input: docker_service_url }
+        name: mystack
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/docker-compose.yaml
       requirements:
         - host: docker-swarm-leader
         - dependency: docker-swarm-worker-1
@@ -85,9 +79,10 @@ topology_template:
     privileged_container-1:
       type: fog.docker.Containers
       properties:
-        name: { get_input: docker_compose_name }
-        url: { get_input: docker_compose_url }
-        packages: { get_input: packages }
+        name: TESTNAME
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
+        packages:
+          - websockets
       requirements:
         - host: fog-node-1
         - dependency: docker-service-1
@@ -95,9 +90,10 @@ topology_template:
     privileged_container-2:
       type: fog.docker.Containers
       properties:
-        name: { get_input: docker_compose_name }
-        url: { get_input: docker_compose_url }
-        packages: { get_input: packages }
+        name: TESTNAME
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
+        packages:
+          - websockets
       requirements:
         - host: fog-node-2
         - dependency: docker-service-1
@@ -105,9 +101,10 @@ topology_template:
     privileged_container-3:
       type: fog.docker.Containers
       properties:
-        name: { get_input: docker_compose_name }
-        url: { get_input: docker_compose_url }
-        packages: { get_input: packages }
+        name: TESTNAME
+        url: https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/actuator/docker-compose.yaml
+        packages:
+          - websockets
       requirements:
         - host: fog-node-3
         - dependency: docker-service-1
