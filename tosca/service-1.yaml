@@ -73,7 +73,7 @@ topology_template:
       requirements:
         - host: docker-swarm-leader
         - dependency: docker-swarm-worker-1
-        - dependency: docker-swarm-worker-2
+        # - dependency: docker-swarm-worker-2
 
     # Privileged containers
     privileged_container-1:

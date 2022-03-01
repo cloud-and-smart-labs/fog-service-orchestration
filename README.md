@@ -42,12 +42,12 @@ ssh-keygen
 ```
 ### Copy the Public Key
 ```bash
-ssh-copy-id pi@192.168.0.XXX
+ssh-copy-id root@192.168.0.XXX
 ```
 ### Set Environment Variable
 By default xOpera login as `centos` username. To change the login username set the `OPERA_SSH_USER` environment variable. All the fog node's usernames should be the same.
 ```bash
-export OPERA_SSH_USER=pi
+export OPERA_SSH_USER=root
 ```
 
 <br>
@@ -59,7 +59,7 @@ deactivate
 ```
 
 ## Orchestration
-TOSCA Sevice Template validation, deployment, and undeployment with `xOpera`. Check out `xOpera CLI` documentation [here](https://xlab-si.github.io/xopera-docs/cli.html).
+TOSCA Sevice Template validation, deployment, and undeployment with `xOpera`. Check out `xOpera CLI` documentation [here](https://xlab-si.github.io/xopera-docs/02-cli.html).
 
 <br>
 
@@ -70,7 +70,7 @@ Validate TOSCA Service Templates <br>
 `-e`: executors (Ansible Playbooks) behind them <br>
 `-i`: Input file 
 ```bash
-opera validate -e -i inputs-0.yaml service-0.yaml 
+opera validate -e -i inputs.yaml service-0.yaml 
 ```
 Validation should look like this if nothing is wrong.
 ```bash
@@ -100,7 +100,7 @@ Deploy TOSCA Service Templates <br>
 `-i`: Input file <br>
 `-w`: Number of concurrent threads
 ```bash
-opera deploy -w 2 -i inputs-0.yaml service-0.yaml
+opera deploy -w 2 -i inputs.yaml service-0.yaml
 ```
 If the deployment of the services is successful.
 ```bash
@@ -155,23 +155,23 @@ If the undeployment of the services is successful.
 ## Service Templates
 | Template Name | Description |
 |---|---|
-| [service 0](service-0.yaml) | Demo Service Template for realizing Dynamic Deployment on VMs/PCs running Linux without IoT hardware. |
-| [service 1](service-1.yaml) | Deploy remote LED service with privileged containers (actuation). On/Off LEDs from a Webpage. |
-| [service 2](service-1.yaml) | Deploy remote LED service with System Service (actuation). On/Off LEDs from a Webpage. |
+| [service 0](tosca/service-0.yaml) | Demo Service Template for realizing Dynamic Deployment on VMs/PCs running Linux without IoT hardware. |
+| [service 1](tosca/service-1.yaml) | Deploy remote LED service with privileged containers (actuation). On/Off LEDs from a Webpage. |
+| [service 2](tosca/service-1.yaml) | Deploy remote LED service with System Service (actuation). On/Off LEDs from a Webpage. |
 
 ## Node Types
 | [Node Types](nodetypes) | Description |
 |---|---|
-| [Docker Containers](nodetypes/docker_containers) | Deploy/Undeploy Docker Containers from a `docker-compose.yaml` file. |
-| [Docker Services](nodetypes/docker_services) | Deploy/Undeploy Docker Stack from a `docker-compose.yaml` file. |
-| [Swarm Leader](nodetypes/swarm_leader) | Node type for Docker Swarm Leader. |
-| [Swarm Worker](nodetypes/swarm_worker) | Node type for Docker Swarm Worker. |
-| [System Service](nodetypes/system_service) | Node type for `systemctl` service. |
+| [Docker Containers](tosca/nodetypes/docker_containers) | Deploy/Undeploy Docker Containers from a `docker-compose.yaml` file. |
+| [Docker Services](tosca/nodetypes/docker_services) | Deploy/Undeploy Docker Stack from a `docker-compose.yaml` file. |
+| [Swarm Leader](tosca/nodetypes/swarm_leader) | Node type for Docker Swarm Leader. |
+| [Swarm Worker](tosca/nodetypes/swarm_worker) | Node type for Docker Swarm Worker. |
+| [System Service](tosca/nodetypes/system_service) | Node type for `systemctl` service. |
 
 ## Relationship Types
 | [Relationship Types](/relationshiptypes) | Description |
 |---|---|
-| [Token Transfer](relationshiptypes/token_transfer) | Swarm Worker nodes dependency on Swarm Manager node. |
+| [Token Transfer](tosca/relationshiptypes/token_transfer) | Swarm Worker nodes dependency on Swarm Manager node. |
 
 ## Supporting Repositories
 | Repository | Description |
