@@ -9,6 +9,8 @@ Dynamic Deployment of the services on fog nodes (Raspberry Pi) on the fly with `
 
 ## Table of Contents
 - [Environment Setup](#environment-setup)
+    - [System Native](#system-native) 
+    - [Docker](#docker)
 - [Orchestration](#orchestration)
 - [Service Templates](#service-templates)
 - [Node Types](#node-types)
@@ -17,6 +19,9 @@ Dynamic Deployment of the services on fog nodes (Raspberry Pi) on the fly with `
 - [License](#license)
 
 ## Environment Setup
+---
+### System Native
+---
 ### Install dependencies
 ```bash
 sudo apt install python3-venv python3-wheel python-wheel-common
@@ -56,6 +61,19 @@ export OPERA_SSH_USER=root
 Deactivate python virtual environment
 ```bash
 deactivate
+```
+
+---
+### Docker
+---
+- Install [Docker](https://docs.docker.com/engine/install/)
+- Clone the repository
+- Build image and start container
+```bash
+sudo chmod +x start.sh 
+```
+```bash
+./start.sh
 ```
 
 ## Orchestration
