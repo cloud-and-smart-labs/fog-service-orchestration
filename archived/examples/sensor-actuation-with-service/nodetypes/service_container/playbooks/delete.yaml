@@ -1,9 +1,0 @@
----
-- hosts: all
-  tasks:
-    - name: Remove python flask service
-      docker_swarm_service:
-        name: pyflask
-        state: absent
-
-...
