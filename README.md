@@ -67,13 +67,13 @@ deactivate
 ### Docker
 ---
 - Install [Docker](https://docs.docker.com/engine/install/)
-- Clone the repository
-- Build image and start container
+- Start `orchestrator` container (`ARM64/AMD64` only)
 ```bash
-sudo chmod +x start.sh 
-```
-```bash
-./start.sh
+docker container run \
+-v ~/.ssh:/root/.ssh \
+-it \
+--rm \
+suvambasak/orchestrator:latest
 ```
 
 ## Orchestration
