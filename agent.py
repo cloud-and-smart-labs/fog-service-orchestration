@@ -75,16 +75,21 @@ async def client(host='localhost', port=80):
         while True:
             try:
                 message = await master.recv()
-                ColorPrint.print_pass("> ", end="")
-                print(message)
+                json_msg = json.loads(message)
 
-                result = command_executor(message)
-                await master.send(json.dumps(result))
+                match json_msg["type"]:
+                    case "cmd":
+                        ColorPrint.print_pass("> ", end="")
 
-                if "" != result["error_code"] and int(result["error_code"]):
-                    print(result["stderr"])
-                else:
-                    print(result["stdout"])
+                        result = command_executor(json_msg["cmd"])
+                        result["type"] = json_msg["type"]
+
+                        await master.send(json.dumps(result))
+
+                        if "" != result["error_code"] and int(result["error_code"]):
+                            print(result["stderr"])
+                        else:
+                            print(result["stdout"])
 
             except websockets.ConnectionClosedOK:
                 print('Connection closed')
