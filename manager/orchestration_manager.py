@@ -4,6 +4,7 @@ import json
 import multiprocessing
 import shlex
 import sys
+import os
 
 
 class ColorPrint:
@@ -243,4 +244,12 @@ async def cli(host='localhost', port=80):
 
 
 if __name__ == "__main__":
-    asyncio.run(cli(port=7890))
+
+    # Default
+    PORT = 7890
+
+    # env var
+    if "PORT" in os.environ:
+        PORT = int(os.environ["PORT"])
+
+    asyncio.run(cli(port=PORT))
