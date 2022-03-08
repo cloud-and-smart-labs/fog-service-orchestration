@@ -151,7 +151,17 @@ async def cli(host='localhost', port=80):
     # Starting OrchestrationManager Websocket server process
     server_process = multiprocessing.Process(target=orchestration_manager)
     server_process.start()
-    # await asyncio.sleep(1)
+
+    sys.stdout.write(" Starting... \r")
+    await asyncio.sleep(2)
+    sys.stdout.write("             \r")
+
+    # Info
+    ColorPrint.print_pass(" Ctrl + C ", end="\t")
+    ColorPrint.print_info(" Terminate ")
+
+    ColorPrint.print_pass(" master count ", end="\t")
+    ColorPrint.print_info(" Number of connected Orchestrators ")
 
     # Starting CLI
     async with websockets.connect(f'ws://{host}:{port}', ping_interval=None) as websocket:
