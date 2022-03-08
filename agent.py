@@ -4,6 +4,35 @@ import json
 import subprocess
 import shlex
 import os
+import sys
+
+
+class ColorPrint:
+    """
+    Colored printing functions for strings that use universal ANSI escape sequences.
+    fail: bold red, pass: bold green, warn: bold yellow,
+    info: bold blue, bold: bold white
+    """
+
+    @staticmethod
+    def print_fail(message, end="\n"):
+        sys.stderr.write("\x1b[1;31m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_pass(message, end="\n"):
+        sys.stdout.write("\x1b[1;32m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_warn(message, end="\n"):
+        sys.stderr.write("\x1b[1;33m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_info(message, end="\n"):
+        sys.stdout.write("\x1b[1;34m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_bold(message, end="\n"):
+        sys.stdout.write("\x1b[1;37m" + f"{message}" + "\x1b[0m" + end)
 
 
 def command_executor(cmd: str) -> dict:
@@ -41,20 +70,21 @@ async def client(host='localhost', port=80):
             "type": "orchestrator"
         }
         await master.send(json.dumps(join))
-        print(" Connected")
+        ColorPrint.print_pass(" Connected ")
 
         while True:
             try:
                 message = await master.recv()
-                print(f"> {message}")
+                ColorPrint.print_pass("> ", end="")
+                print(message)
 
                 result = command_executor(message)
                 await master.send(json.dumps(result))
 
                 if "" != result["error_code"] and int(result["error_code"]):
-                    print(f"""< {result["stderr"]}""")
+                    print(result["stderr"])
                 else:
-                    print(f"""< {result["stdout"]}""")
+                    print(result["stdout"])
 
             except websockets.ConnectionClosedOK:
                 print('Connection closed')
@@ -80,5 +110,5 @@ if __name__ == "__main__":
     try:
         asyncio.run(client(host=IP, port=PORT))
     except KeyboardInterrupt as e:
-        print("\n\n Terminate\n")
+        ColorPrint.print_fail("\n\n Terminate \n")
         exit(1)

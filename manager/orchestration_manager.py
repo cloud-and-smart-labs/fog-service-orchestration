@@ -3,6 +3,35 @@ import websockets
 import json
 import multiprocessing
 import shlex
+import sys
+
+
+class ColorPrint:
+    """
+    Colored printing functions for strings that use universal ANSI escape sequences.
+    fail: bold red, pass: bold green, warn: bold yellow, 
+    info: bold blue, bold: bold white
+    """
+
+    @staticmethod
+    def print_fail(message, end="\n"):
+        sys.stderr.write("\x1b[1;31m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_pass(message, end="\n"):
+        sys.stdout.write("\x1b[1;32m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_warn(message, end="\n"):
+        sys.stderr.write("\x1b[1;33m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_info(message, end="\n"):
+        sys.stdout.write("\x1b[1;34m" + f"{message}" + "\x1b[0m" + end)
+
+    @staticmethod
+    def print_bold(message, end="\n"):
+        sys.stdout.write("\x1b[1;37m" + f"{message}" + "\x1b[0m" + end)
 
 
 class OrchestrationManager:
@@ -159,25 +188,38 @@ async def cli(host='localhost', port=80):
             orch = int(await recv())
 
             for i in range(orch):
-                print(f'NAT {i}')
+                ColorPrint.print_warn(f' | NAT {i} | ')
+
                 json_msg = json.loads(await recv())
 
-                print(f"command: {json_msg['cmd']}")
-                print(f"error_code: {json_msg['error_code']}")
-                print(f"stdout: \n{json_msg['stdout']}")
-                print(f"stderr: \n{json_msg['stderr']}\n")
+                ColorPrint.print_pass("command", end=" : ")
+                ColorPrint.print_info(json_msg['cmd'])
+
+                ColorPrint.print_pass("error_code", end=" : ")
+                ColorPrint.print_info(json_msg["error_code"])
+
+                ColorPrint.print_pass("stdout", end=" : \n")
+                ColorPrint.print_info(json_msg["stdout"])
+
+                ColorPrint.print_pass("stderr", end=" : \n")
+                ColorPrint.print_info(json_msg["stderr"])
 
         async def management_output(request: str) -> None:
             "Command for connected orchestration manager"
             await send(request)
             json_msg = json.loads(await recv())
 
-            print(f"command: {json_msg['cmd']}")
-            print(f"output: {json_msg['output']}")
+            # print(f"command: {json_msg['cmd']}")
+            ColorPrint.print_pass("command", end=" : ")
+            ColorPrint.print_info(json_msg['cmd'])
+
+            ColorPrint.print_pass("output", end=" : \n")
+            ColorPrint.print_info(json_msg["output"])
 
         while True:
             try:
-                command = input("prompt: ")
+                ColorPrint.print_pass("prompt", end=": ")
+                command = input()
                 args = shlex.split(command)
 
                 if "master" == args[0] and len(args) > 1:
@@ -195,10 +237,10 @@ async def cli(host='localhost', port=80):
                     await command_output(json.dumps(request))
 
             except KeyboardInterrupt:
-                print('\n\n Terminate. \n')
+                ColorPrint.print_fail("\n\n Terminate \n")
                 server_process.terminate()
                 exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(cli(port=7890))
