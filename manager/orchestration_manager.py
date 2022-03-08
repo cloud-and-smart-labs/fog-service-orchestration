@@ -6,6 +6,10 @@ import shlex
 
 
 class OrchestrationManager:
+    """
+    Orchestration Manager manages all the orchestration nodes running behind NAT through Websockets
+    """
+
     def __init__(self, host='0.0.0.0', port=80) -> None:
         self._HOST = host
         self._PORT = port
@@ -15,6 +19,7 @@ class OrchestrationManager:
         asyncio.run(self._server())
 
     async def _server(self) -> None:
+        "Start Websockets server"
         async with websockets.serve(
             self._connection_handler,
             self._HOST,
@@ -23,18 +28,20 @@ class OrchestrationManager:
         ):
             await asyncio.Future()
 
-    async def _connection_handler(self, connection) -> None:
+    async def _connection_handler(self, connection: websockets) -> None:
+        "Manages authentication and connections"
         try:
             message = await connection.recv()
+            connection_type = json.loads(message)
+            # print(connection_type)
+
         except websockets.ConnectionClosedOK:
             # print('_connection_handler : Connection closed')
             return
         except Exception as e:
             # print(f'_connection_handler : {e}')
+            await connection.close()
             return
-
-        connection_type = json.loads(message)
-        # print(connection_type)
 
         if 'cli' == connection_type['type']:
             self._cli_connection = connection
@@ -44,11 +51,13 @@ class OrchestrationManager:
             self.__orchestrators.add(connection)
             await self._orchestrator_connection_handler(connection)
 
-    async def _orchestrator_connection_handler(self, orchestrator_connection) -> None:
+    async def _orchestrator_connection_handler(self, orchestrator_connection: websockets) -> None:
+        "Orchestrator messages handler"
         try:
             async for output in orchestrator_connection:
                 # print(f'ORCH: {output}')
-                await self._cli_connection.send(output)
+                if self._cli_connection:
+                    await self._cli_connection.send(output)
         except websockets.ConnectionClosedOK:
             pass
             # print('_orchestrator_connection_handler : Connection closed')
@@ -59,20 +68,24 @@ class OrchestrationManager:
             self.__orchestrators.remove(orchestrator_connection)
 
     async def _cli_connection_handler(self) -> None:
+        "CLI connection handler"
         try:
             async for message in self._cli_connection:
                 # print(f'CLI: {cmd}')
                 json_msg = json.loads(message)
                 # print(json_msg)
+
                 if "cmd" == json_msg["type"]:
                     await self._cli_connection.send(str(len(self.__orchestrators)))
                     websockets.broadcast(self.__orchestrators, json_msg["cmd"])
+
                 elif "admin" == json_msg["type"]:
                     await self._cli_connection.send(
                         json.dumps(
-                            self.command_interpreter(json_msg["cmd"])
+                            self._command_interpreter(json_msg["cmd"])
                         )
                     )
+
         except websockets.ConnectionClosedOK:
             pass
             # print('_cli_connection_handler : Connection closed')
@@ -82,10 +95,13 @@ class OrchestrationManager:
         finally:
             self._cli_connection = None
 
-    def command_interpreter(self, command):
+    def _command_interpreter(self, command: str) -> dict:
+        "Orchestration Manager management commands"
+
         response = {
             "cmd": command
         }
+
         match command:
             case 'count':
                 response["output"] = len(self.__orchestrators)
@@ -96,15 +112,22 @@ class OrchestrationManager:
 
 
 async def cli(host='localhost', port=80):
-    def orchestration_manager():
+    "CLI for Orchestration Manager"
+
+    def orchestration_manager() -> None:
+        "Orchestration Manager starter"
         OrchestrationManager(port=port)
+
+    # Starting OrchestrationManager Websocket server process
     server_process = multiprocessing.Process(target=orchestration_manager)
     server_process.start()
     # await asyncio.sleep(1)
 
+    # Starting CLI
     async with websockets.connect(f'ws://{host}:{port}', ping_interval=None) as websocket:
 
-        async def send(websocket, msg):
+        async def send(msg: str) -> str:
+            "Send message"
             try:
                 await websocket.send(msg)
             except websockets.ConnectionClosedOK:
@@ -112,7 +135,8 @@ async def cli(host='localhost', port=80):
             except Exception as e:
                 print(f'Exception (1) : {e}')
 
-        async def recv(websocket):
+        async def recv() -> str:
+            "Recevice message"
             msg = None
             try:
                 msg = await websocket.recv()
@@ -126,23 +150,27 @@ async def cli(host='localhost', port=80):
         join = {
             "type": "cli"
         }
-        await send(websocket, json.dumps(join))
+        await send(json.dumps(join))
 
-        async def command_output(request):
-            await send(websocket, request)
-            orch = int(await recv(websocket))
+        async def command_output(request: str) -> None:
+            "Command for connected orchestrators"
+
+            await send(request)
+            orch = int(await recv())
+
             for i in range(orch):
                 print(f'NAT {i}')
-                json_msg = json.loads(await recv(websocket))
+                json_msg = json.loads(await recv())
 
                 print(f"command: {json_msg['cmd']}")
                 print(f"error_code: {json_msg['error_code']}")
                 print(f"stdout: \n{json_msg['stdout']}")
                 print(f"stderr: \n{json_msg['stderr']}\n")
 
-        async def management_output(request):
-            await send(websocket, request)
-            json_msg = json.loads(await recv(websocket))
+        async def management_output(request: str) -> None:
+            "Command for connected orchestration manager"
+            await send(request)
+            json_msg = json.loads(await recv())
 
             print(f"command: {json_msg['cmd']}")
             print(f"output: {json_msg['output']}")
@@ -158,6 +186,7 @@ async def cli(host='localhost', port=80):
                         "type": "admin"
                     }
                     await management_output(json.dumps(request))
+
                 else:
                     request = {
                         "cmd": command,
