@@ -231,21 +231,23 @@ async def cli(host='localhost', port=80):
             try:
                 ColorPrint.print_pass("prompt", end=": ")
                 command = input()
-                args = shlex.split(command)
 
-                if "master" == args[0] and len(args) > 1:
-                    request = {
-                        "cmd": args[1],
-                        "type": "admin"
-                    }
-                    await management_output(json.dumps(request))
+                if command:
+                    args = shlex.split(command)
 
-                else:
-                    request = {
-                        "cmd": command,
-                        "type": "cmd"
-                    }
-                    await command_output(json.dumps(request))
+                    if "master" == args[0] and len(args) > 1:
+                        request = {
+                            "cmd": args[1],
+                            "type": "admin"
+                        }
+                        await management_output(json.dumps(request))
+
+                    else:
+                        request = {
+                            "cmd": command,
+                            "type": "cmd"
+                        }
+                        await command_output(json.dumps(request))
 
             except KeyboardInterrupt:
                 ColorPrint.print_fail("\n\n Terminate \n")
