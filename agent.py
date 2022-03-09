@@ -80,12 +80,14 @@ async def client(host='localhost', port=80):
                 match json_msg["type"]:
                     case "cmd":
                         ColorPrint.print_pass("> ", end="")
+                        print(json_msg["cmd"])
 
                         result = command_executor(json_msg["cmd"])
                         result["type"] = json_msg["type"]
 
                         await master.send(json.dumps(result))
 
+                        ColorPrint.print_info("< ", end="")
                         if "" != result["error_code"] and int(result["error_code"]):
                             print(result["stderr"])
                         else:
