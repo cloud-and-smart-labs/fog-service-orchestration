@@ -4,7 +4,7 @@ RUN apt update -y && apt upgrade -y
 RUN apt install openssh-client -y
 RUN mkdir /root/tosca root/.ssh
 COPY ./tosca /root/tosca/
-COPY ./agent.py /root/
+COPY ./orchestrator/* /root/
 WORKDIR /root/tosca
 ENV OPERA_SSH_USER=root
 CMD ["/bin/bash"]
