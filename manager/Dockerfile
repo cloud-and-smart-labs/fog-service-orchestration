@@ -1,8 +1,8 @@
 FROM python:3.10.2-slim-bullseye
 RUN pip3 install websockets --no-cache-dir
 WORKDIR /root
-COPY ./orchestration_manager.py /root/
-CMD ["python3","/root/orchestration_manager.py"]
+COPY * /root/
+CMD ["python3","/root/cli.py"]
 
 
 # suvambasak/master:latest
