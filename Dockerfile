@@ -2,7 +2,7 @@ FROM python:3.10.2-slim-bullseye
 RUN pip3 install opera==0.6.8 websockets --no-cache-dir
 RUN apt update -y && apt upgrade -y
 RUN apt install openssh-client -y
-RUN mkdir /root/tosca root/.ssh
+RUN mkdir /root/tosca /root/.ssh /root/.config
 COPY ./tosca /root/tosca/
 COPY ./orchestrator/* /root/
 WORKDIR /root/tosca

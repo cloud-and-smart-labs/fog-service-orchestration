@@ -4,6 +4,7 @@ services:
     image: suvambasak/orchestrator:latest
     volumes:
       - "~/.ssh:/root/.ssh"
+      - "/tmp/opera_config:/root/.config"
     environment:
       - IP=${IP}
       - PORT=${PORT}

@@ -4,11 +4,13 @@ import json
 import os
 from printer import ColorPrint
 from command_executor import CommandExecutor
+from yaml_processor import create_input_file
 
 
 async def client(host="localhost", port=80):
     "Websocket connection handler"
 
+    create_input_file()
     printer = ColorPrint()
 
     async with websockets.connect(f"ws://{host}:{port}", ping_interval=None) as master:
