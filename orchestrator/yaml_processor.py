@@ -1,19 +1,4 @@
-import yaml
-from config import Configuration
 from abc import ABC, abstractmethod
-
-
-def create_input_file() -> None:
-    "Creates inputs.yaml file"
-    with open(Configuration.get_host_file_path()) as host_file:
-        hosts = host_file.read().strip().split("\n")
-
-        inputs_yaml = {}
-        for index, host in enumerate(hosts):
-            inputs_yaml[f"node_{index+1}"] = host
-
-        with open(Configuration.get_inputs_yaml_file_path(), "w") as inputs_yaml_file:
-            inputs_yaml_file.write(yaml.dump(inputs_yaml))
 
 
 class YAMLBuilder(ABC):
@@ -24,6 +9,19 @@ class YAMLBuilder(ABC):
     @abstractmethod
     def export(self) -> dict:
         pass
+
+
+class InputsFile(YAMLBuilder):
+    def __init__(self, host_list: list[str]) -> None:
+        self.host_list = host_list
+
+    def build(self) -> None:
+        self.inputs_yaml = dict()
+        for index, host in enumerate(self.host_list):
+            self.inputs_yaml[f"node_{index+1}"] = host
+
+    def export(self) -> dict:
+        return self.inputs_yaml
 
 
 class Inputs(YAMLBuilder):
