@@ -1,4 +1,16 @@
 from abc import ABC, abstractmethod
+from typing import Any
+
+
+class Generator:
+    def __init__(self, prefix: str) -> None:
+        self.prefix = prefix
+        self.index = 0
+
+    def generator(self) -> Any:
+        while True:
+            self.index += 1
+            yield f"{self.prefix}_{self.index}"
 
 
 class YAMLBuilder(ABC):
@@ -16,9 +28,11 @@ class InputsFile(YAMLBuilder):
         self.host_list = host_list
 
     def build(self) -> None:
+        node_name = Generator("node").generator()
+
         self.inputs_yaml = dict()
-        for index, host in enumerate(self.host_list):
-            self.inputs_yaml[f"node_{index+1}"] = host
+        for host in self.host_list:
+            self.inputs_yaml[next(node_name)] = host
 
     def export(self) -> dict:
         return self.inputs_yaml
