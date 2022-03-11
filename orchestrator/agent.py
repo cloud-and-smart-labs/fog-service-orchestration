@@ -14,14 +14,14 @@ async def client(host="localhost", port=80):
 
     file_handler = FileHandler()
     host_list = file_handler.read_file(
-        Configuration.get_host_file_path()).split("\n")
+        Configuration.HOST_FILE_PATH).split("\n")
 
     input_file = InputsFile(host_list)
     input_file.build()
     input_yaml_file = input_file.export()
 
     file_handler.write_yaml_file(
-        Configuration.get_inputs_yaml_file_path(), input_yaml_file)
+        Configuration.INPUTS_YAML_FILE_PATH, input_yaml_file)
 
     printer = ColorPrint()
 

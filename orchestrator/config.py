@@ -3,14 +3,10 @@ class Configuration:
     Configuration file path and settings
     """
 
-    @staticmethod
-    def get_config_dir() -> str:
-        return "/root/.config/"
+    CONFIG_DIR = "/root/.config/"
 
-    @staticmethod
-    def get_host_file_path() -> str:
-        return "/root/.config/HOST"
+    HOST_FILE_PATH = "/root/.config/HOST"
 
-    @staticmethod
-    def get_inputs_yaml_file_path() -> str:
-        return "/root/tosca/inputs.yaml"
+    INPUTS_YAML_FILE_PATH = "/root/tosca/inputs.yaml"
+
+    SERVICE_TEMPLATE_PATH = "/root/tosca/service.yaml"
