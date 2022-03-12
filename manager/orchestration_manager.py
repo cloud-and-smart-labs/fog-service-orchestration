@@ -43,15 +43,18 @@ class OrchestrationManager:
             return
 
         match connection_type["type"]:
-            case "cli":
+            case OrchestrationManager.ConnectionType.CLI:
                 self._cli_connection = connection
                 await self._cli_connection_handler()
 
-            case "orchestrator":
+            case OrchestrationManager.ConnectionType.ORCHESTRATOR:
                 self.__orchestrators.add(connection)
                 await self._orchestrator_connection_handler(connection)
 
-    async def _orchestrator_connection_handler(self, orchestrator_connection: websockets) -> None:
+    async def _orchestrator_connection_handler(
+        self,
+        orchestrator_connection: websockets
+    ) -> None:
         "Orchestrator messages handler"
 
         try:
@@ -74,7 +77,7 @@ class OrchestrationManager:
                 json_msg = json.loads(message)
 
                 match json_msg["type"]:
-                    case "fetch":
+                    case OrchestrationManager.CLICommand.FETCH:
                         if self._msg_queue:
                             json_msg["payload"] = self._msg_queue[:]
                             self._msg_queue.clear()
@@ -83,10 +86,10 @@ class OrchestrationManager:
                             json_msg["payload"] = []
                         await self._cli_connection.send((json.dumps(json_msg)))
 
-                    case "cmd":
+                    case OrchestrationManager.CLICommand.COMMAND:
                         websockets.broadcast(self.__orchestrators, message)
 
-                    case "admin":
+                    case OrchestrationManager.CLICommand.ADMIN:
                         json_msg["output"] = self._command_interpreter(
                             json_msg["cmd"])
                         self._msg_queue.append(json_msg)
@@ -102,8 +105,20 @@ class OrchestrationManager:
         "Orchestration Manager management commands"
 
         match command:
-            case "count":
+            case OrchestrationManager.MasterCommand.COUNT:
                 return str(len(self.__orchestrators))
 
             case _:
                 return "INVALID"
+
+    class CLICommand:
+        FETCH = "fetch"
+        COMMAND = "cmd"
+        ADMIN = "admin"
+
+    class MasterCommand:
+        COUNT = "count"
+
+    class ConnectionType:
+        CLI = "cli"
+        ORCHESTRATOR = "orchestrator"
