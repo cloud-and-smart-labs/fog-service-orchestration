@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import shlex
 import os
 from printer import ColorPrint
 from command_executor import CommandExecutor
@@ -12,6 +13,7 @@ async def client(host="localhost", port=80):
 
     tosca = TOSCAProcessor()
     printer = ColorPrint()
+    executor = CommandExecutor()
 
     async with websockets.connect(f"ws://{host}:{port}", ping_interval=None) as master:
         join = {
@@ -29,16 +31,23 @@ async def client(host="localhost", port=80):
                     case "cmd":
                         printer.command_viewer(json_msg["cmd"])
 
-                        executor = CommandExecutor()
-                        executor.set_command(json_msg["cmd"])
-                        executor.execute()
-                        result = executor.result()
+                        args = shlex.split(json_msg["cmd"])
 
-                        result["type"] = json_msg["type"]
+                        # TOSCA Template build command
+                        if "build" == args[0]:
+                            tosca.create_service_template(args[1])
 
-                        await master.send(json.dumps(result))
+                        # Shell Command
+                        else:
+                            executor.set_command(json_msg["cmd"])
+                            executor.execute()
+                            result = executor.result()
 
-                        printer.output_viewer(result)
+                            result["type"] = json_msg["type"]
+
+                            await master.send(json.dumps(result))
+
+                            printer.output_viewer(result)
 
             except websockets.ConnectionClosedOK:
                 print("Connection closed")
