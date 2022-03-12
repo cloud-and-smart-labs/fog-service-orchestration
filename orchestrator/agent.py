@@ -43,11 +43,11 @@ async def client(host="localhost", port=80):
                             executor.execute()
                             result = executor.result()
 
+                            # Output view and send response
                             result["type"] = json_msg["type"]
-
-                            await master.send(json.dumps(result))
-
                             printer.output_viewer(result)
+
+                await master.send(json.dumps(result))
 
             except websockets.ConnectionClosedOK:
                 print("Connection closed")

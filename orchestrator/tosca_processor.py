@@ -3,6 +3,52 @@ from io_operation import FileHandler, NetworkHandler
 from abc import ABC, abstractmethod
 
 
+class TOSCAProcessor:
+    """
+    Create inputs.yaml file from the system HOST file (orchestrator.config.py) &
+    Creates TOSCA service template from URL (Docker Compose file, Service file, Python scripts)
+    TOSCA Service Template is created based on the generated inputs.yaml file.
+    """
+
+    def __init__(self) -> None:
+        # IO objects
+        self.file_handler = FileHandler()
+        self.network_handler = NetworkHandler()
+
+        # Create inputs.yaml file
+        host_list = self.file_handler.read_file(
+            Configuration.HOST_FILE_PATH
+        ).split("\n")
+
+        input_file = InputsFile(host_list)
+        input_file.build()
+        input_yaml_file = input_file.export()
+
+        self.file_handler.write_yaml_file(
+            Configuration.INPUTS_YAML_FILE_PATH,
+            input_yaml_file
+        )
+
+        # inputs name for the template creation
+        self.input_names = list(input_yaml_file.keys())
+
+    def create_service_template(self, url: str) -> None:
+        "Create TOSCA Service Template from URL"
+
+        services_yaml = self.network_handler.pull_yaml(url)
+
+        tosca_service_template = ServiceTemplate(
+            self.input_names,
+            services_yaml
+        )
+        tosca_service_template.build()
+
+        self.file_handler.write_yaml_file(
+            Configuration.SERVICE_TEMPLATE_PATH,
+            tosca_service_template.export()
+        )
+
+
 class NodeTypes:
     "All node types"
 
@@ -546,49 +592,3 @@ class ServiceTemplate(YAMLBuilder):
         self.build_version()
         self.build_imports()
         self.build_topology_template()
-
-
-class TOSCAProcessor:
-    """
-    Create inputs.yaml file from the system HOST file (orchestrator.config.py) &
-    Creates TOSCA service template from URL (Docker Compose file, Service file, Python scripts)
-    TOSCA Service Template is created based on the generated inputs.yaml file.
-    """
-
-    def __init__(self) -> None:
-        # IO objects
-        self.file_handler = FileHandler()
-        self.network_handler = NetworkHandler()
-
-        # Create inputs.yaml file
-        host_list = self.file_handler.read_file(
-            Configuration.HOST_FILE_PATH
-        ).split("\n")
-
-        input_file = InputsFile(host_list)
-        input_file.build()
-        input_yaml_file = input_file.export()
-
-        self.file_handler.write_yaml_file(
-            Configuration.INPUTS_YAML_FILE_PATH,
-            input_yaml_file
-        )
-
-        # inputs name for the template creation
-        self.input_names = list(input_yaml_file.keys())
-
-    def create_service_template(self, url: str) -> None:
-        "Create TOSCA Service Template from URL"
-
-        services_yaml = self.network_handler.pull_yaml(url)
-
-        tosca_service_template = ServiceTemplate(
-            self.input_names,
-            services_yaml
-        )
-        tosca_service_template.build()
-
-        self.file_handler.write_yaml_file(
-            Configuration.SERVICE_TEMPLATE_PATH,
-            tosca_service_template.export()
-        )

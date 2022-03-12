@@ -4,7 +4,7 @@ import shlex
 
 class CommandExecutor:
     """
-    "Shell command executor"
+    Shell command executor
     """
 
     def __init__(self) -> None:
@@ -12,6 +12,7 @@ class CommandExecutor:
 
     def set_command(self, command: str) -> None:
         "Add command to execute"
+
         self._command = command
         args = shlex.split(self._command)
         if len(args):
@@ -21,28 +22,43 @@ class CommandExecutor:
 
     def execute(self) -> None:
         "Execute added command"
+
         try:
-            self.__shell_output = subprocess.run(self.__command_args,
-                                                 capture_output=True,
-                                                 text=True
-                                                 )
+            self.__shell_output = subprocess.run(
+                self.__command_args,
+                capture_output=True,
+                text=True
+            )
+
         except Exception as e:
             self._exception_flag = True
             print(f"Exception (2): {str(e)}")
 
     def result(self) -> dict:
         "Get result after execution"
+
         if not self._exception_flag:
-            return {
-                "cmd": self._command,
-                "error_code": self.__shell_output.returncode,
-                "stdout": self.__shell_output.stdout,
-                "stderr": self.__shell_output.stderr
-            }
+            return CommandExecutor.output_format(
+                self._command,
+                self.__shell_output.returncode,
+                self.__shell_output.stdout,
+                self.__shell_output.stderr
+            )
         else:
-            return {
-                "cmd": self._command,
-                "error_code": "",
-                "stdout": "",
-                "stderr": ""
-            }
+            return CommandExecutor.output_format(
+                self._command, "", "", ""
+            )
+
+    @staticmethod
+    def output_format(
+        cmd: str,
+        error_code: int,
+        stdout: str,
+        stderr: str
+    ) -> dict:
+        return {
+            "cmd": cmd,
+            "error_code": error_code,
+            "stdout": stdout,
+            "stderr": stderr
+        }
