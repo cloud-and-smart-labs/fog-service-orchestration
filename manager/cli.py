@@ -43,7 +43,7 @@ async def cli(host="localhost", port=80):
 
             try:
                 await send(json.dumps({
-                    "type": "fetch"
+                    "type": OrchestrationManager.CLICommand.FETCH
                 }))
 
                 message = await websocket.recv()
@@ -58,7 +58,7 @@ async def cli(host="localhost", port=80):
                 print(f"Exception (4) : {e}")
 
         await send(json.dumps({
-            "type": "cli"
+            "type": OrchestrationManager.ConnectionType.CLI
         }))
 
         while True:
@@ -73,7 +73,7 @@ async def cli(host="localhost", port=80):
                         if len(args) > 1:
                             request = {
                                 "cmd": args[1],
-                                "type": "admin"
+                                "type": OrchestrationManager.CLICommand.ADMIN
                             }
                         else:
                             ColorPrint.print_fail("Missing arg(s)")
@@ -81,7 +81,7 @@ async def cli(host="localhost", port=80):
                     else:
                         request = {
                             "cmd": command,
-                            "type": "cmd"
+                            "type": OrchestrationManager.CLICommand.COMMAND
                         }
                     await send(json.dumps(request))
 
