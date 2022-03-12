@@ -4,25 +4,13 @@ import json
 import os
 from printer import ColorPrint
 from command_executor import CommandExecutor
-from yaml_processor import InputsFile
-from config import Configuration
-from io_operation import FileHandler
+from tosca_processor import TOSCAProcessor
 
 
 async def client(host="localhost", port=80):
     "Websocket connection handler"
 
-    file_handler = FileHandler()
-    host_list = file_handler.read_file(
-        Configuration.HOST_FILE_PATH).split("\n")
-
-    input_file = InputsFile(host_list)
-    input_file.build()
-    input_yaml_file = input_file.export()
-
-    file_handler.write_yaml_file(
-        Configuration.INPUTS_YAML_FILE_PATH, input_yaml_file)
-
+    tosca = TOSCAProcessor()
     printer = ColorPrint()
 
     async with websockets.connect(f"ws://{host}:{port}", ping_interval=None) as master:
