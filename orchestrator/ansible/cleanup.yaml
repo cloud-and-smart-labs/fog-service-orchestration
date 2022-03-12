@@ -1,0 +1,27 @@
+- hosts: all
+  remote_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Leave Docker Swarm
+      docker_swarm:
+        state: absent
+        force: true
+
+    - name: Docker prune
+      docker_prune:
+        containers: yes
+        networks: yes
+
+    - name: Remove the Docker Stack location
+      file:
+        path: /tmp/stack
+        state: absent
+    - name: Remove the Docker Compose location
+      file:
+        path: /tmp/compose
+        state: absent
+    - name: Remove the .opera location
+      file:
+        path: /root/tosca/.opera/
+        state: absent
