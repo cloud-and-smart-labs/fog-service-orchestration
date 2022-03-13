@@ -21,7 +21,3 @@
       file:
         path: /tmp/compose
         state: absent
-    - name: Remove the .opera location
-      file:
-        path: /root/tosca/.opera/
-        state: absent
