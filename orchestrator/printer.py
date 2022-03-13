@@ -28,6 +28,9 @@ class ColorPrint:
     def print_bold(message: str, end="\n"):
         sys.stdout.write("\x1b[1;37m" + f"{message}" + "\x1b[0m" + end)
 
+    def log(self, log_msg: str) -> None:
+        ColorPrint.print_warn(f"+ {log_msg}")
+
     def command_viewer(self, command: str) -> None:
         "Command to be executed"
         ColorPrint.print_pass("> ", end="")
@@ -41,3 +44,11 @@ class ColorPrint:
         for line in output["stderr"].split("\n"):
             ColorPrint.print_fail("< ", end="")
             print(line)
+
+
+if __name__ == "__main__":
+    ColorPrint.print_fail("Fail")
+    ColorPrint.print_pass("Pass")
+    ColorPrint.print_warn("Warn")
+    ColorPrint.print_info("Info")
+    ColorPrint.print_bold("Bold")

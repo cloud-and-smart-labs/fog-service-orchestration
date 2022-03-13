@@ -40,8 +40,11 @@ async def client(host="localhost", port=80):
                         # Shell Command
                         else:
                             executor.set_command(json_msg["cmd"])
+                            printer.log("Command Executing")
                             executor.execute()
+                            printer.log("Waiting for execution result")
                             result = executor.result()
+                            printer.log("Got results")
 
                             # Output view and send response
                             result["type"] = json_msg["type"]
