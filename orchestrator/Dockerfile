@@ -11,7 +11,7 @@ COPY *.py /root/
 
 WORKDIR /root/tosca
 ENV OPERA_SSH_USER=root
-CMD ["/bin/bash"]
+CMD ["python3", "/root/agent.py"]
 
 
 # suvambasak/orchestrator:latest

@@ -1,3 +1,4 @@
+from pprint import pprint
 import subprocess
 import shlex
 
@@ -38,27 +39,24 @@ class CommandExecutor:
         "Get result after execution"
 
         if not self._exception_flag:
-            return CommandExecutor.output_format(
-                self._command,
-                self.__shell_output.returncode,
-                self.__shell_output.stdout,
-                self.__shell_output.stderr
-            )
+            return {
+                "cmd": self._command,
+                "error_code": self.__shell_output.returncode,
+                "stdout": self.__shell_output.stdout,
+                "stderr": self.__shell_output.stderr
+            }
         else:
-            return CommandExecutor.output_format(
-                self._command, "", "", ""
-            )
+            return {
+                "cmd": self._command,
+                "error_code": "",
+                "stdout": "",
+                "stderr": ""
+            }
 
-    @staticmethod
-    def output_format(
-        cmd: str,
-        error_code: int,
-        stdout: str,
-        stderr: str
-    ) -> dict:
-        return {
-            "cmd": cmd,
-            "error_code": error_code,
-            "stdout": stdout,
-            "stderr": stderr
-        }
+
+if __name__ == "__main__":
+    cmd_exe = CommandExecutor()
+    cmd_exe.set_command("ls -l")
+    cmd_exe.execute()
+
+    pprint(cmd_exe.result())

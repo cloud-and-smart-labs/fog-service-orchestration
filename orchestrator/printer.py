@@ -39,11 +39,13 @@ class ColorPrint:
     def output_viewer(self, output: dict) -> None:
         "Output of the executed command"
         for line in output["stdout"].split("\n"):
-            ColorPrint.print_info("< ", end="")
-            print(line)
+            if line:
+                ColorPrint.print_info("< ", end="")
+                print(line)
         for line in output["stderr"].split("\n"):
-            ColorPrint.print_fail("< ", end="")
-            print(line)
+            if line:
+                ColorPrint.print_fail("< ", end="")
+                print(line)
 
 
 if __name__ == "__main__":
@@ -52,3 +54,20 @@ if __name__ == "__main__":
     ColorPrint.print_warn("Warn")
     ColorPrint.print_info("Info")
     ColorPrint.print_bold("Bold")
+
+    test_dict = {'cmd': 'ls -l',
+                 'error_code': 0,
+                 'stderr': '',
+                 'stdout': 'total 56\n'
+                 '-rw-r--r--   1 suvambasak  staff  11357  7 Mar 20:48 LICENSE\n'
+                 '-rw-r--r--   1 suvambasak  staff   7804  7 Mar 20:48 README.md\n'
+                 '-rw-r--r--   1 suvambasak  staff    272 13 Mar 13:44 '
+                 'docker-compose.yaml\n'
+                 'drwxr-xr-x   4 suvambasak  staff    128  7 Mar 20:48 docs\n'
+                 'drwxr-xr-x   7 suvambasak  staff    224 13 Mar 08:48 manager\n'
+                 'drwxr-xr-x  12 suvambasak  staff    384 13 Mar 13:54 orchestrator\n'
+                 '-rw-r--r--   1 suvambasak  staff    209  7 Mar 20:48 '
+                 'requirements.txt\n'}
+
+    printer = ColorPrint()
+    print(printer.output_viewer(test_dict))

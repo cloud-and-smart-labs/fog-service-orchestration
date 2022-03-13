@@ -35,6 +35,7 @@ async def client(host="localhost", port=80):
 
                         # TOSCA Template build command
                         if "build" == args[0]:
+                            printer.log("Creating TOSCA Service Template")
                             tosca.create_service_template(args[1])
 
                         # Shell Command

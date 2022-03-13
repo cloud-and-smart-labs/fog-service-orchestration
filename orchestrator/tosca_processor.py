@@ -592,3 +592,21 @@ class ServiceTemplate(YAMLBuilder):
         self.build_version()
         self.build_imports()
         self.build_topology_template()
+
+
+if __name__ == "__main__":
+    import yaml
+    template = ServiceTemplate(
+        ["node_1", "node_2"],
+        {'fog.docker.Services':
+         {'url': 'https://raw.githubusercontent.com/cloud-and-smart-labs/docker-images/main/websocket-led/docker-compose.yaml'},
+         'fog.system.Service':
+         {'name': 'led-websocket',
+          'script_url': 'https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.py',
+          'service_url': 'https://raw.githubusercontent.com/cloud-and-smart-labs/pi-system-service/master/led-websocket/led-websocket.service',
+          'dependency_packages': ['websockets']
+          }
+         }
+    )
+    template.build()
+    print(yaml.dump(template.export()))
