@@ -12,6 +12,7 @@ Dynamic Deployment of the services on fog nodes (Raspberry Pi) on the fly with `
     - [System Native](#system-native) 
     - [Docker](#docker)
 - [Orchestration](#orchestration)
+- [Orchestration Behind NAT](#orchestration-behind-nat)
 - [Service Templates](#service-templates)
 - [Node Types](#node-types)
 - [Relationship Types](#relationship-types)
@@ -71,9 +72,8 @@ deactivate
 ```bash
 docker container run \
 -v ~/.ssh:/root/.ssh \
--it \
---rm \
-suvambasak/orchestrator:latest
+-it --rm suvambasak/orchestrator:latest \
+"bash"
 ```
 
 ## Orchestration
@@ -92,7 +92,7 @@ opera validate -e -i inputs.yaml service-0.yaml
 ```
 Validation should look like this if nothing is wrong.
 ```bash
-(.venv) dex@Suvams-Air fog-service-orchestration % opera validate -e -i inputs-0.yaml service-0.yaml 
+(.venv) dex@Suvams-Air tosca % opera validate -e -i inputs-0.yaml service-0.yaml 
 Validating service template...
 [Worker_0]   Validating fog-node-1_0
 [Worker_0]   Validation of fog-node-1_0 complete
@@ -122,7 +122,7 @@ opera deploy -w 2 -i inputs.yaml service-0.yaml
 ```
 If the deployment of the services is successful.
 ```bash
-(.venv) dex@Suvams-Air fog-service-orchestration % opera deploy -w 2 -i inputs-0.yaml service-0.yaml
+(.venv) dex@Suvams-Air tosca % opera deploy -w 2 -i inputs-0.yaml service-0.yaml
 [Worker_0]   Deploying fog-node-1_0
 [Worker_1]   Deploying fog-node-2_0
 [Worker_1]   Deployment of fog-node-2_0 complete
@@ -154,7 +154,7 @@ opera undeploy -w 2
 ```
 If the undeployment of the services is successful.
 ```bash
-(.venv) dex@Suvams-Air fog-service-orchestration % opera undeploy -w 2                              
+(.venv) dex@Suvams-Air tosca % opera undeploy -w 2                              
 [Worker_0]   Undeploying docker-service-1_0
 [Worker_0]     Executing delete on docker-service-1_0
 [Worker_0]   Undeployment of docker-service-1_0 complete
@@ -170,26 +170,51 @@ If the undeployment of the services is successful.
 [Worker_0]   Undeployment of fog-node-1_0 complete
 ```
 
+## Orchestration Behind NAT
+### Orchestration Manager Node
+- Start orchestration manager container
+```bash
+docker container run -p 80:7890 -it --rm suvambasak/master:latest
+```
+### Orchestrator Node
+- Pick one node under each NAT for the orchestration.
+The node must log in to each device in that NAT through SSH without a password (`~/.ssh`)
+- Create a file `HOST` and list all the `IP addresses` of the device in that `NAT`
+```bash
+root@raspberrypi:~# cat /tmp/opera_config/HOST 
+192.168.0.184
+192.168.0.103
+```
+- Start the orchestrator container (IP=`52.140.51.137` IP of the Orchestration Manager Node)
+```bash
+docker container run \
+-v ~/.ssh:/root/.ssh \
+-v /tmp/opera_config:/root/.config \
+-e PORT=80 \
+-e IP=52.140.51.137 \
+-t suvambasak/orchestrator:latest
+```
+
 ## Service Templates
 | Template Name | Description |
 |---|---|
-| [service 0](tosca/service-0.yaml) | Demo Service Template for realizing Dynamic Deployment on VMs/PCs running Linux without IoT hardware. |
-| [service 1](tosca/service-1.yaml) | Deploy remote LED service with privileged containers (actuation). On/Off LEDs from a Webpage. |
-| [service 2](tosca/service-1.yaml) | Deploy remote LED service with System Service (actuation). On/Off LEDs from a Webpage. |
+| [service 0](/orchestrator/tosca/service-0.yaml) | Demo Service Template for realizing Dynamic Deployment on VMs/PCs running Linux without IoT hardware. |
+| [service 1](/orchestrator/tosca/service-1.yaml) | Deploy remote LED service with privileged containers (actuation). On/Off LEDs from a Webpage. |
+| [service 2](/orchestrator/tosca/service-1.yaml) | Deploy remote LED service with System Service (actuation). On/Off LEDs from a Webpage. |
 
 ## Node Types
-| [Node Types](nodetypes) | Description |
+| [Node Types](/orchestrator/tosca/nodetypes) | Description |
 |---|---|
-| [Docker Containers](tosca/nodetypes/docker_containers) | Deploy/Undeploy Docker Containers from a `docker-compose.yaml` file. |
-| [Docker Services](tosca/nodetypes/docker_services) | Deploy/Undeploy Docker Stack from a `docker-compose.yaml` file. |
-| [Swarm Leader](tosca/nodetypes/swarm_leader) | Node type for Docker Swarm Leader. |
-| [Swarm Worker](tosca/nodetypes/swarm_worker) | Node type for Docker Swarm Worker. |
-| [System Service](tosca/nodetypes/system_service) | Node type for `systemctl` service. |
+| [Docker Containers](/orchestrator/tosca/nodetypes/docker_containers) | Deploy/Undeploy Docker Containers from a `docker-compose.yaml` file. |
+| [Docker Services](/orchestrator/tosca/nodetypes/docker_services) | Deploy/Undeploy Docker Stack from a `docker-compose.yaml` file. |
+| [Swarm Leader](/orchestrator/tosca/nodetypes/swarm_leader) | Node type for Docker Swarm Leader. |
+| [Swarm Worker](/orchestrator/tosca/nodetypes/swarm_worker) | Node type for Docker Swarm Worker. |
+| [System Service](/orchestrator/tosca/nodetypes/system_service) | Node type for `systemctl` service. |
 
 ## Relationship Types
-| [Relationship Types](/relationshiptypes) | Description |
+| [Relationship Types](/orchestrator/tosca/relationshiptypes) | Description |
 |---|---|
-| [Token Transfer](tosca/relationshiptypes/token_transfer) | Swarm Worker nodes dependency on Swarm Manager node. |
+| [Token Transfer](/orchestrator/tosca/relationshiptypes/token_transfer) | Swarm Worker nodes dependency on Swarm Manager node. |
 
 ## Supporting Repositories
 | Repository | Description |
