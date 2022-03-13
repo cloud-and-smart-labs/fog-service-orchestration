@@ -65,6 +65,9 @@ class ColorPrint:
 
         ColorPrint.print_pass(" master count ", end="\t")
         ColorPrint.print_info(" Number of connected Orchestrators ")
+
+        ColorPrint.print_pass(" build [URL] ", end="\t")
+        ColorPrint.print_info(" Create Template ")
         self.hr_line()
 
     def loader_start(self) -> None:
