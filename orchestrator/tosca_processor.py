@@ -1,3 +1,4 @@
+from printer import ColorPrint
 from config import Configuration
 from io_operation import FileHandler, NetworkHandler
 from abc import ABC, abstractmethod
@@ -11,6 +12,8 @@ class TOSCAProcessor:
     """
 
     def __init__(self) -> None:
+        self.log = ColorPrint()
+
         # IO objects
         self.file_handler = FileHandler()
         self.network_handler = NetworkHandler()
@@ -37,16 +40,19 @@ class TOSCAProcessor:
 
         services_yaml = self.network_handler.pull_yaml(url)
 
-        tosca_service_template = ServiceTemplate(
-            self.input_names,
-            services_yaml
-        )
-        tosca_service_template.build()
+        if services_yaml:
+            tosca_service_template = ServiceTemplate(
+                self.input_names,
+                services_yaml
+            )
+            tosca_service_template.build()
 
-        self.file_handler.write_yaml_file(
-            Configuration.SERVICE_TEMPLATE_PATH,
-            tosca_service_template.export()
-        )
+            self.file_handler.write_yaml_file(
+                Configuration.SERVICE_TEMPLATE_PATH,
+                tosca_service_template.export()
+            )
+        else:
+            self.log.log("Template creation failed!")
 
 
 class NodeTypes:

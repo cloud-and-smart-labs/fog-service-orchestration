@@ -31,8 +31,13 @@ class NetworkHandler():
 
     def pull(self, url: str) -> str:
         "Pull as a text"
-        with urlopen(url, context=self.context) as url:
-            text = url.read().decode()
+        text = ""
+        try:
+            with urlopen(url, context=self.context) as url:
+                text = url.read().decode()
+        except Exception as e:
+            print(f"NetworkHandler:pull Failed : {e}")
+        finally:
             return text
 
     def pull_yaml(self, url: str) -> dict:
@@ -42,6 +47,8 @@ class NetworkHandler():
 
 if __name__ == "__main__":
     nh = NetworkHandler()
+    nh.pull_yaml("build")
+
     data = nh.pull_yaml(
         "https://gist.githubusercontent.com/suvambasak/d1d744dea000b79b4dd1698839596a31/raw/7a1ed009811da438166e43ec51ec14480ad73065/s2.yaml")
     print(data)
