@@ -59,6 +59,14 @@ async def command_handler(message: str, master: websockets):
 
                 asyncio.create_task(template_builder(args[1]))
 
+            # Ready with ansible-playbook
+            case "ready":
+                asyncio.create_task(shell_command_executor(
+                    json_msg["type"],
+                    "ansible-playbook ready.yaml",
+                    master)
+                )
+
             # Cleanup with ansible-playbook
             case "cleanup":
                 asyncio.create_task(shell_command_executor(

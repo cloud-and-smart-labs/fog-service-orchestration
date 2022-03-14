@@ -5,7 +5,7 @@ RUN apt update -y && apt upgrade -y  && \
     mkdir /root/tosca /root/.ssh /root/.config /etc/ansible/
 
 COPY /ansible/ansible.cfg /etc/ansible/ansible.cfg
-COPY /ansible/cleanup.yaml /root/tosca/cleanup.yaml
+COPY /ansible/*.yaml /root/tosca/
 COPY /tosca /root/tosca/
 COPY *.py /root/
 
