@@ -1,9 +1,9 @@
-from ast import arg
 import asyncio
 import websockets
 import json
 import shlex
 import os
+import time
 from printer import ColorPrint
 from command_executor import CommandExecutor
 from tosca_processor import TOSCAProcessor
@@ -62,7 +62,7 @@ async def client(host="localhost", port=80):
                 print("Connection closed")
                 return
             except Exception as e:
-                print(f"Exception (1): {e}")
+                print(f"Exception:client: {e}")
                 return
 
 
@@ -80,7 +80,20 @@ if __name__ == "__main__":
         PORT = int(os.environ["PORT"])
 
     try:
-        asyncio.run(client(host=IP, port=PORT))
+        while True:
+            try:
+                asyncio.run(client(host=IP, port=PORT))
+            except Exception as e:
+                ColorPrint.print_fail(" Connection lost.")
+
+                ColorPrint.print_info(" Trying to reconnect. \r", end="")
+                time.sleep(1)
+                ColorPrint.print_info(" Trying to reconnect.. \r", end="")
+                time.sleep(1)
+                ColorPrint.print_info(" Trying to reconnect... \r", end="")
+                time.sleep(1)
+                ColorPrint.print_info("                         \r", end="")
+
     except KeyboardInterrupt as e:
         ColorPrint.print_fail("\n\n Terminate \n")
         exit(1)
