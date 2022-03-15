@@ -1,0 +1,15 @@
+- hosts: all
+  remote_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Install prerequsiste Python packages
+      pip:
+        name:
+          - pip
+          - PyYAML
+          - docker-compose
+          - jsondiff
+          - docker
+        state: latest
+        executable: pip3

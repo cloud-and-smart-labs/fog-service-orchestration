@@ -2,14 +2,14 @@
 - hosts: all
   gather_facts: false
   tasks:
-    - name: Install prerequsiste Python packages
-      pip:
-        name:
-          - pip==21.3.1
-          - docker==5.0.3
-          - jsondiff==1.3.0
-        state: latest
-        executable: pip3
+    # - name: Install prerequsiste Python packages
+    #   pip:
+    #     name:
+    #       - pip==21.3.1
+    #       - docker==5.0.3
+    #       - jsondiff==1.3.0
+    #     state: latest
+    #     executable: pip3
 
     - name: Starting docker service
       service:

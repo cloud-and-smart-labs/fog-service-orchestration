@@ -2,13 +2,13 @@
 - hosts: all
   gather_facts: false
   tasks:
-    - name: Install prerequsiste Python packages
-      pip:
-        name:
-          - PyYAML >= 3.11
-          - docker-compose >= 1.7.0
-        state: latest
-        executable: pip3
+    # - name: Install prerequsiste Python packages
+    #   pip:
+    #     name:
+    #       - PyYAML >= 3.11
+    #       - docker-compose >= 1.7.0
+    #     state: latest
+    #     executable: pip3
 
     - name: Install prerequsiste Python packages for Privileged Container
       pip:
