@@ -14,6 +14,11 @@
         recurse: true
         state: directory
 
+    - name: env file
+      copy:
+        dest: /tmp/system-service/env.json
+        content: "{\"ip\":\"{{ ip_addr }}\"}"
+
     - name: Download Python script
       get_url:
         url: "{{ script_url }}"

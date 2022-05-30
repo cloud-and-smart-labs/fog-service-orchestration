@@ -22,6 +22,11 @@
         recurse: true
         state: directory
 
+    - name: env file
+      copy:
+        dest: /tmp/compose/.env
+        content: "IP={{ ip_addr }}"
+
     - name: Download docker-compose file
       get_url:
         url: "{{ url }}"
